@@ -1,0 +1,61 @@
+{
+  "zone": "samcui.com",
+  "deployed": "2026-10-23",
+  "description": "Ordered Single Redirects deployed in Cloudflare. Documentation, not automatically applied by GitHub Pages.",
+  "rules": [
+    {
+      "name": "Blog migration - legacy feed",
+      "expression": "(http.host in {\"samcui.com\" \"www.samcui.com\"} and http.request.uri.path in {\"/feed\" \"/feed/\"})",
+      "target_type": "static",
+      "target": "https://blog.cui.to/index.xml",
+      "status_code": 301,
+      "preserve_query_string": true,
+      "enabled": true
+    },
+    {
+      "name": "Blog migration - legacy sitemap",
+      "expression": "(http.host in {\"samcui.com\" \"www.samcui.com\"} and http.request.uri.path eq \"/wp-sitemap.xml\")",
+      "target_type": "static",
+      "target": "https://blog.cui.to/sitemap_index.xml",
+      "status_code": 301,
+      "preserve_query_string": true,
+      "enabled": true
+    },
+    {
+      "name": "Blog migration - Chinese category",
+      "expression": "(http.host in {\"samcui.com\" \"www.samcui.com\"} and http.request.uri.path eq \"/post/category/uncategorized/\")",
+      "target_type": "static",
+      "target": "https://blog.cui.to/post/",
+      "status_code": 301,
+      "preserve_query_string": true,
+      "enabled": true
+    },
+    {
+      "name": "Blog migration - English category",
+      "expression": "(http.host in {\"samcui.com\" \"www.samcui.com\"} and http.request.uri.path eq \"/en/post/category/uncategorized/\")",
+      "target_type": "static",
+      "target": "https://blog.cui.to/en/post/",
+      "status_code": 301,
+      "preserve_query_string": true,
+      "enabled": true
+    },
+    {
+      "name": "Blog migration - original English posts",
+      "expression": "(http.host in {\"samcui.com\" \"www.samcui.com\"} and http.request.uri.path in {\"/post/set-4k-10bit-120hz-via-hdmi-with-ryzen-5700g-a520/\" \"/post/acp2larkbot-bridging-lark-to-ai-agents-over-acp/\"})",
+      "target_type": "dynamic",
+      "target": "concat(\"https://blog.cui.to/en\", http.request.uri.path)",
+      "status_code": 301,
+      "preserve_query_string": true,
+      "enabled": true
+    },
+    {
+      "name": "Blog migration - all old blog URLs",
+      "expression": "(http.host in {\"samcui.com\" \"www.samcui.com\"})",
+      "target_type": "dynamic",
+      "target": "concat(\"https://blog.cui.to\", http.request.uri.path)",
+      "status_code": 301,
+      "preserve_query_string": true,
+      "enabled": true
+    }
+  ]
+}
