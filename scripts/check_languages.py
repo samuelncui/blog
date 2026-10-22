@@ -3,6 +3,7 @@ import json
 import hashlib
 import pathlib
 import sys
+import subprocess
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from urllib.parse import unquote
@@ -10,7 +11,10 @@ from urllib.parse import unquote
 repo = pathlib.Path(__file__).resolve().parents[1]
 root = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else 'public')
 pairs = json.loads((repo / 'migration/translations.json').read_text())
-origin = 'https://samcui.com'
+origin = json.loads(subprocess.run(
+    ['hugo', 'config', '--format', 'json'], cwd=repo,
+    check=True, capture_output=True, text=True,
+).stdout)['baseurl'].rstrip('/')
 
 class Page(HTMLParser):
     def __init__(self, path):

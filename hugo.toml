@@ -1,5 +1,5 @@
 theme = 'stack'
-baseURL = 'https://samcui.com/'
+baseURL = 'https://blog.cui.to/'
 title = 'SamCui Computing'
 locale = 'zh-CN'
 defaultContentLanguage = 'zh'

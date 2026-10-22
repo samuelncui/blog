@@ -12,10 +12,12 @@ from urllib.parse import unquote, urlsplit
 root = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else 'public')
 repo = pathlib.Path(__file__).resolve().parents[1]
 errors = []
-config = json.loads(subprocess.run(
+hugo_config = json.loads(subprocess.run(
     ['hugo', 'config', '--format', 'json'], cwd=repo,
     check=True, capture_output=True, text=True,
-).stdout)['params']['giscus']
+).stdout)
+origin = hugo_config['baseurl'].rstrip('/')
+config = hugo_config['params']['giscus']
 widget_attrs = {
     'src': 'https://giscus.app/client.js',
     'data-repo': config['repo'],
@@ -146,7 +148,7 @@ for row in mapping:
         elif front.get('giscusPath'):
             attrs['data-term'] = front['giscusPath']
         expected_widgets[target] = attrs
-    expected = 'https://samcui.com' + row['path']
+    expected = origin + row['path']
     if page.backlinks != page.canonical:
         errors.append(f'Giscus backlink mismatch: {row["path"]}')
     if len(page.canonical) != 1 or unquote(page.canonical[0]) != expected:

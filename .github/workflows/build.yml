@@ -10,9 +10,9 @@ on:
         type: boolean
         default: false
       preview:
-        description: 'Use the default /blog/ Pages URL with noindex; disable after custom-domain setup'
+        description: 'Build for the default /blog/ Pages URL with noindex instead of the custom domain'
         type: boolean
-        default: true
+        default: false
 permissions:
   contents: read
 jobs:

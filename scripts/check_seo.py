@@ -4,6 +4,7 @@ import hashlib
 import json
 import pathlib
 import sys
+import subprocess
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from urllib.parse import unquote, urlsplit
@@ -14,7 +15,10 @@ baseline = json.loads((repo / 'migration/seo.json').read_text())
 translations = json.loads((repo / 'migration/translations.json').read_text())
 originals = {unquote(row['paths']['zh']): row['originalLanguage'] for row in translations}
 pair_by_path = {unquote(row['paths']['zh']): row for row in translations}
-origin = 'https://samcui.com'
+origin = json.loads(subprocess.run(
+    ['hugo', 'config', '--format', 'json'], cwd=repo,
+    check=True, capture_output=True, text=True,
+).stdout)['baseurl'].rstrip('/')
 ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9', 'i': 'http://www.google.com/schemas/sitemap-image/1.1'}
 
 class Head(HTMLParser):
@@ -137,7 +141,7 @@ assert 'noindex' in directives(read(root / '404.html').meta['robots'])
 sitemap = ET.parse(root / 'zh/sitemap.xml').getroot()
 locations = [unquote(n.text) for n in sitemap.findall('s:url/s:loc', ns)]
 assert len(locations) == len(set(locations))
-assert {unquote(r['url']) for r in baseline['pages']} <= set(locations)
+assert {origin + unquote(urlsplit(r['url']).path) for r in baseline['pages']} <= set(locations)
 for url in locations:
     assert url.startswith(origin + '/') and target(url).is_file()
     p = read(target(url))
@@ -161,7 +165,7 @@ assert {n.text for n in automatic_index.findall('s:sitemap/s:loc', ns)} == {orig
 feed = ET.parse(root / 'index.xml').getroot()
 items = feed.findall('channel/item')
 assert len(items) == 33
-assert {unquote(i.findtext('link')) for i in items} == {unquote(r['url']) for r in baseline['pages'] if r['type'] == 'post'}
+assert {unquote(i.findtext('link')) for i in items} == {origin + unquote(urlsplit(r['url']).path) for r in baseline['pages'] if r['type'] == 'post'}
 assert all(i.findtext('description') and i.findtext('pubDate') for i in items)
 robots = (root / 'robots.txt').read_text()
 assert 'Sitemap: ' + origin + '/sitemap_index.xml' in robots

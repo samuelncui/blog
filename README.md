@@ -1,6 +1,6 @@
 # SamCui Computing
 
-Hugo source for https://samcui.com/. Public articles and referenced images only.
+Hugo source for https://blog.cui.to/. Public articles and referenced images only. The original samcui.com paths are preserved.
 
 ## Local use
 
@@ -90,4 +90,4 @@ Image captions use semantic figure/figcaption markup. The favicon is a teal S mo
 
 Reviewed all tracked files, reachable Git history and prior local revisions for secrets; gitleaks reported no findings. Checked image metadata and all 12 imported discussion threads. The original bilingual About page, photographs and contact address are retained at the owner’s request; the resume and lost-cat pages remain excluded. Publication is approved; production DNS cutover remains separate.
 
-When publishing without a custom domain, the workflow’s default `preview` option prefixes local HTML links with `/blog/` and sets `noindex`. Production canonicals stay on samcui.com. Disable `preview` when deploying to the configured custom domain.
+The configured production origin is `https://blog.cui.to/`; canonical URLs, language alternates, metadata, RSS and sitemaps follow `hugo.toml`’s `baseURL`. Manual publication defaults to `preview=false`. For a temporary default-domain deployment, enable `preview` to prefix local HTML links with `/blog/` and set `noindex` while retaining the configured production canonicals. DNS and HTTPS must be verified separately; this change does not redirect samcui.com or modify the cui.to apex.

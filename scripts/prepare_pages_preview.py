@@ -1,9 +1,16 @@
 """Adapt checked production HTML for the default GitHub Pages subdirectory."""
 import pathlib
+import json
 import re
 import sys
+import subprocess
 from html.parser import HTMLParser
 
+repo = pathlib.Path(__file__).resolve().parents[1]
+origin = json.loads(subprocess.run(
+    ['hugo', 'config', '--format', 'json'], cwd=repo,
+    check=True, capture_output=True, text=True,
+).stdout)['baseurl'].rstrip('/')
 root = pathlib.Path(sys.argv[1])
 prefix = sys.argv[2]
 assert re.fullmatch(r'/[A-Za-z0-9_-]+/', prefix)
@@ -28,7 +35,7 @@ class Preview(HTMLParser):
             self.has_robots = True
             updated = re.sub(r'content=(\"|\')[^\"\']*\1', 'content="noindex, follow"', updated)
         if tag == 'meta' and dict(attrs).get('http-equiv', '').lower() == 'refresh':
-            updated = updated.replace('https://samcui.com/', prefix)
+            updated = updated.replace(origin + '/', prefix)
         if updated != original:
             line, col = self.getpos()
             start = sum(map(len, self.lines[:line - 1])) + col
