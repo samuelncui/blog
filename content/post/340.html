@@ -1,0 +1,25 @@
+{
+  "title": "nginx port_in_redirect 选项的用处",
+  "date": "2017-11-30T11:55:59+08:00",
+  "lastmod": "2017-11-30T11:55:59+08:00",
+  "url": "/post/nginx-port_in_redirect-选项的用处/",
+  "draft": false,
+  "description": "记录多层代理中补斜杠重定向带出端口的问题，并给出关闭 nginx port_in_redirect 的处理办法。",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "系统运维",
+    "网络",
+    "故障排查"
+  ],
+  "seoTitle": "nginx port_in_redirect 选项的用处 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-340",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/nginx-port_in_redirect-选项的用处/"
+}
+
+
+<p>二层代理时，自动添加斜杠带端口，只需要把 port_in_redirect 设置成 off 就可以解决了~~</p>

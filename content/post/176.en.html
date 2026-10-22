@@ -1,0 +1,40 @@
+{
+  "title": "Fixing Font Fallback Problems in Windows NT",
+  "date": "2015-01-21T01:00:23+08:00",
+  "lastmod": "2015-01-21T01:05:54+08:00",
+  "url": "/en/post/windows-nt-fonts-fallback-about-wtp-and-itunes/",
+  "draft": false,
+  "description": "Traces distorted Chinese text in iTunes on Windows Thin PC to incomplete font fallback settings, then describes restoring those settings from a working Windows 7 computer.",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "Windows",
+    "故障排查"
+  ],
+  "giscusDiscussion": 8,
+  "seoTitle": "Fixing Font Fallback Problems in Windows NT - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-176",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/windows-nt-fonts-fallback-about-wtp-and-itunes/"
+}
+
+<p>I recently tried installing Windows 7 on my mum's Lenovo F41A, but it was simply too old, so I switched to Windows Thin PC (<a href="http://ichemistry.blog.163.com/blog/static/171997127201293115654522/" rel="noopener noreferrer" target="_blank" title="Windows Thin PC Download, Installation, Chinese Localization and Activation Guide - Qingquan Shishang Liu's Journal - NetEase Blog">tutorial here</a>—huge thanks to its author; I love them for this!).</p>
+<p>Windows Thin PC does not come with Chinese support, so you have to install it yourself. After installing the Chinese language pack, I ran into a problem in iTunes: the fonts looked decidedly strange.</p>
+<p>This is caused by Windows font fallback. Windows Thin PC has an incomplete set of fonts: by default, it includes neither Microsoft YaHei and similar fonts nor the associated fallback settings. It only has what seems to be a 'No tofu' Unicode font. Unfortunately, about all that font manages is to avoid missing-character boxes. The font requested by iTunes does not contain Chinese characters, and the fallback process ends up falling back to the original font. The result is a distorted mess that is painful to look at.<br/>
+<br/>
+With Google and my superb (ha, ha) English—I passed CET-4 by a whole ten points—I followed Microsoft's  <a href="http://msdn.microsoft.com/en-us/goglobal/bb688134.aspx" rel="noopener noreferrer" target="_blank" title="Globalization Step-by-Step: Fonts">article</a> and found the font fallback section of the registry:</p>
+<ul>
+<li><strong>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontLink\SystemLink</strong></li>
+</ul>
+<p>There are several registry entries here, one for each font.</p>
+<p>According to Apple's  <a href="http://support.apple.com/zh-cn/ts4338" rel="noopener noreferrer" target="_blank" title="iTunes for Windows: Troubleshooting Missing Menus and Text in iTunes">article</a>, the fonts used by iTunes should be  <em>'Segoe UI Bold' and 'Segoe UI Regular'</em> , so I changed the fallback settings for those two entries to match my working Windows 7 computer.</p>
+<p>This fixed some of the distorted fonts in the UI, but the problem remained in lists and elsewhere. After half an hour of searching, I still could not find the exact name of the other font iTunes used.</p>
+<p>So I exported all the fallback settings from the working computer and imported them into the target computer. Problem solved.</p>
+<p>So, to make this easier for readers (though I wonder whether anyone will ever read this...), here are the steps:</p>
+<ul>
+<li>Export the entire following key from a working computer:  <strong>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontLink\SystemLink</strong></li>
+<li>Import it on the computer with the font fallback problem.</li>
+</ul>

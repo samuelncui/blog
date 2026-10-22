@@ -1,0 +1,44 @@
+{
+  "title": "A Guided Automatic Installation Script for SS",
+  "date": "2017-02-01T23:02:36+08:00",
+  "lastmod": "2019-03-01T15:45:40+08:00",
+  "url": "/en/post/ss-引导式自动安装脚本/",
+  "draft": false,
+  "description": "Introduces a guided Shadowsocks setup script for Ubuntu Server VPS hosts, combining installation with BBR, TCP tuning, daemon supervision and routine maintenance instead of leaving those steps to separate manual configuration.",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "Linux",
+    "网络",
+    "自动化"
+  ],
+  "seoTitle": "A Guided Automatic Installation Script for SS - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-316",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/ss-引导式自动安装脚本/"
+}
+
+<p>Most scripts I had found online only installed Shadowsocks itself. On a new server, there was still plenty of other work to do.</p>
+<p>Yesterday, fed up with all the blocking on Kuandaitong, I wanted to set up an SS server on an Alibaba Cloud server in mainland China. Even with the available scripts, I still had to make all sorts of adjustments manually.</p>
+<p>So I wrote this script for a typical Ubuntu Server VPS.<br/>
+<br/>
+Just two steps:</p>
+<pre>wget --no-check-certificate https://raw.githubusercontent.com/abc950309/ShadowsocksWizards/master/wizards.sh
+sudo bash wizards.sh</pre>
+<p>You can find the project here:</p>
+<p><a href="https://github.com/abc950309/ShadowsocksWizards" rel="noopener noreferrer" target="_blank">https://github.com/abc950309/ShadowsocksWizards</a></p>
+<p>If you do not have a VPS, I think Vultr is pretty good. Its Los Angeles location can stream 720p even over Kuandaitong, and 1080p works fine on the office network. Here is a US$50 referral offer (you need to add US$5 first to receive it):  <a href="https://www.vultr.com/?ref=7916057-4F" rel="noopener noreferrer" target="_blank">https://www.vultr.com/?ref=7916057-4F</a> You can support me in the process, too.</p>
+<hr/>
+<p>Main features:</p>
+<ul>
+<li>Automatically installs shadowsocks-go and asks whether to change the default configuration.</li>
+<li>Automatically installs Google TCP BBR.</li>
+<li>Asks for a response type and tunes TCP accordingly.</li>
+<li>Automatically schedules weekly reboots to prevent lockups after long uptimes.</li>
+<li>Automatically installs supervisor to manage the daemon.</li>
+<li>Automatically cleans up cached files.</li>
+<li>Listens on port 443 by default, taking advantage of the GFW's lighter inspection of common ports to improve speed.</li>
+</ul>

@@ -1,0 +1,32 @@
+{
+  "title": "Postfix使Linux服务器CPU占用率居高不下的原因及解决办法",
+  "date": "2013-07-24T21:11:26+08:00",
+  "lastmod": "2013-07-24T21:14:46+08:00",
+  "url": "/post/ubuntu-postfix-let-cpu-high/",
+  "draft": false,
+  "description": "从 Postfix 进程导致的服务器高负载查到上万封垃圾邮件积压，最终发现 SMTP 未启用认证，留下邮件服务安全配置的教训。",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "邮件服务",
+    "Linux",
+    "故障排查"
+  ],
+  "seoTitle": "Postfix使Linux服务器CPU占用率居高不下的原因及解决办法 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-53",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/ubuntu-postfix-let-cpu-high/"
+}
+
+
+<p>最近上SSH的时候发现CPU load averages总是高于2，top一下发现都好几十了……<br/>
+大部分资源消耗大的进程都是用户postfix开的，很明显是它的问题。<br/>
+用webmin检查一下发现，Postfix待处理邮件列表里足有上万封垃圾邮件……资源都消耗在这上面了……<br/>
+菊花当时就一紧……还以为账号漏出去了呢……但后来发现，我的SMTP压根就没验证……<br/>
+贴上检查SMTP验证的网站一个备用……</p>
+<blockquote><p><a href="http://www.antispam-ufrj.pads.ufrj.br/test-relay.html" rel="noopener noreferrer">http://www.antispam-ufrj.pads.ufrj.br/test-relay.html</a></p></blockquote>
+<p>SMTP验证什么的就百度吧……教程相当多了……<br/>
+看来下次不能在安全的事情上偷懒啦，不知道是不是我这个区段的IP都得被邮件商封掉……</p>

@@ -1,0 +1,34 @@
+{
+  "title": "Fixing rc.local Tasks That Stop Some Time After Boot",
+  "date": "2013-08-31T21:23:10+08:00",
+  "lastmod": "2013-08-31T21:23:10+08:00",
+  "url": "/en/post/如何解决rc-local中任务在开机一段时间后停止的问题/",
+  "draft": false,
+  "description": "Using a DNSPod DDNS script as the example, this troubleshooting note traces an rc.local task’s unexpected exit to the shell’s -e option and records the workaround used.",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "系统运维",
+    "自动化",
+    "Linux",
+    "网络"
+  ],
+  "seoTitle": "Fixing rc.local Tasks That Stop Some Time After Boot - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-63",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/如何解决rc-local中任务在开机一段时间后停止的问题/"
+}
+
+<p>My server uses DNSPod, and since its IP address is dynamic, I need DDNS.<br/>
+I use a shell-script-based DDNS program that implements DDNS through DNSPod's standard API. I've forgotten the program<br/>
+Previously, I used corn to run it every 2 minutes.<br/>
+Later, I used sleep to run it every two minutes.<br/>
+But then I found that the process would disappear a few hours after each day's reboot…<br/>
+After some trial and error, I solved the problem.<br/>
+The problem was in the first line of rc.local:</p>
+<p>    #!/bin/sh -e</p>
+<p>The “-e” option means “stop on error.” So, whenever the ping gets a little high and an error occurs, it stops.<br/>
+The fix is simply to remove “-e.”</p>

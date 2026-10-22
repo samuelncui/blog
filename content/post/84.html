@@ -1,0 +1,893 @@
+{
+  "title": "利用十指科技的TFS-M74A指纹模块制作Arduino指纹锁",
+  "date": "2013-11-09T20:03:19+08:00",
+  "lastmod": "2013-11-10T00:31:08+08:00",
+  "url": "/post/arduino-tfs-m74a-lock/",
+  "draft": false,
+  "description": "基于 Arduino Mega、TFS-M74A 指纹模块和舵机改造宿舍门锁，记录外围硬件、指纹容量配置及程序实现。",
+  "categories": [
+    "硬件与数码"
+  ],
+  "tags": [
+    "Arduino",
+    "硬件",
+    "校园生活"
+  ],
+  "giscusDiscussion": 4,
+  "seoTitle": "利用十指科技的TFS-M74A指纹模块制作Arduino指纹锁 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-84",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/arduino-tfs-m74a-lock/"
+}
+
+
+<p>这个指纹锁是运行在宿舍门上的，通过一个14g金属舵机控制门锁——没错，我们学校的门锁就这么烂……<br/>
+板子是Arduino Mega，接了一个舵机，一个4×4的键盘（键位在程序中可以看到），一块5110LCD，一个微动开关（触发指纹模块电源），以及我们的主角，TFS-M74A指纹模块。<br/>
+BTW，十指科技的指纹模块的协议是互通的，都可以交换使用。只是最大储存数不同，需要改下（自己去找吧，少年！）。<br/>
+接在那里之类的，在程序中可以看到。本应该写下来，可惜懒了……5110库是LCD5110_Graph，没有的请百度。<br/>
+本人八人寝（四人寝或更少的同志请不要晒优越哦……），所以名字那个数组预留了16个（左右指各一个），大家可以改一下。<br/>
+懒得注释了，自己分析吧……<br/>
+</p>
+<div class="dp-highlighter">
+<div class="bar"></div>
+<ol class="dp-cpp">
+<li class="alt"><span><span class="comment">/* </span> </span></li>
+<li><span><span class="comment">指纹锁程序 by SamCui.com at oct 15, 2013 </span> </span></li>
+<li class="alt"><span><span class="comment">更改请注明原作者，谢谢！ </span> </span></li>
+<li><span><span class="comment">What’s New:  </span> </span></li>
+<li class="alt"><span><span class="comment">v2 </span> </span></li>
+<li><span><span class="comment">更改指纹传感器,重写部分段落,规范注释. </span> </span></li>
+<li class="alt"><span><span class="comment">并为完全离机做准备. </span> </span></li>
+<li><span><span class="comment">v2.1 </span> </span></li>
+<li class="alt"><span><span class="comment">完成稿 </span> </span></li>
+<li><span><span class="comment">*/</span><span>  </span></span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="keyword">void</span><span> printStage(</span><span class="datatypes">int</span><span> s, </span><span class="datatypes">int</span><span> r = 24);   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 指纹识别器常量定义 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="preprocessor">  #define TIMEOUT             2500 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="comment">// 基本应答信息定义 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define ACK_SUCCESS         0x00 </span><span>  </span></li>
+<li><span class="preprocessor">  #define ACK_FAIL            0x01 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define ACK_FULL            0x04 </span><span>  </span></li>
+<li><span class="preprocessor">  #define ACK_NO_USER           0x05 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define ACK_USER_EXIST      0x07 </span><span>  </span></li>
+<li><span class="preprocessor">  #define ACK_TIMEOUT         0x08 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define ACK_GO_OUT              0x0F </span><span>  </span></li>
+<li><span class="preprocessor">  #define ACK_NOTHING             0xEF </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="comment">// 用户信息定义 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define ACK_ALL_USER        0x00 </span><span>  </span></li>
+<li><span class="preprocessor">  #define ACK_GUEST_USER        0x01 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define ACK_NORMAL_USER     0x02 </span><span>  </span></li>
+<li><span class="preprocessor">  #define ACK_MASTER_USER     0x03 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="preprocessor">  #define USER_MAX_CNT        50 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="comment">// 命令定义 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define CMD_HEAD              0xF5 </span><span>  </span></li>
+<li><span class="preprocessor">  #define CMD_TAIL              0xF5 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define CMD_ADD_1               0x01 </span><span>  </span></li>
+<li><span class="preprocessor">  #define CMD_ADD_2               0x02 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define CMD_ADD_3           0x03 </span><span>  </span></li>
+<li><span class="preprocessor">  #define CMD_MATCH             0x0C </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define CMD_DEL                   0x04 </span><span>  </span></li>
+<li><span class="preprocessor">  #define CMD_DEL_ALL             0x05 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define CMD_USER_CNT        0x09 </span><span>  </span></li>
+<li><span class="preprocessor">  #define CMD_LP_MODE             0x2C </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">  #define CMD_FINGER_DETECTED 0x14 </span><span>  </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="comment">// 指纹模块定义结束 </span><span>  </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="comment">// 微动开关接口 </span><span>  </span></li>
+<li><span>     </span></li>
+<li class="alt"><span class="preprocessor">  #define SWITCH_PIN              36 </span><span>  </span></li>
+<li><span class="preprocessor">  #define POWER_PIN           37 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// LCD5110库 </span><span>  </span></li>
+<li class="alt"><span class="preprocessor">#include &lt;LCD5110_Graph.h&gt; </span><span>  </span></li>
+<li><span>LCD5110 myGLCD(34,33,32,30,31);</span><span class="comment">// 接口 </span><span>  </span></li>
+<li class="alt"><span class="keyword">extern</span><span> uint8_t SmallFont[];</span><span class="comment">// 设置字体为小 </span><span>  </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="comment">// 键盘库 </span><span>  </span></li>
+<li><span class="preprocessor">#include &lt;Keypad.h&gt; </span><span>  </span></li>
+<li class="alt"><span class="keyword">const</span><span> byte ROWS = 4;</span><span class="comment">//4行 </span><span>  </span></li>
+<li><span class="keyword">const</span><span> byte COLS = 4;</span><span class="comment">//4列 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 行列对应内容 </span><span>  </span></li>
+<li class="alt"><span class="datatypes">char</span><span> keys[ROWS][COLS] = {   </span></li>
+<li><span>{‘1′,’2′,’3′,’A’},   </span></li>
+<li class="alt"><span>{‘4′,’5′,’6′,’B’},   </span></li>
+<li><span>{‘7′,’8′,’9′,’C’},   </span></li>
+<li class="alt"><span>{‘*’,’0′,’#’,’D’}   </span></li>
+<li><span>};   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 相应接口 </span><span>  </span></li>
+<li class="alt"><span>byte rowPins[ROWS] = {22,23,24,25};   </span></li>
+<li><span>byte colPins[COLS] = {26,27,28,29};   </span></li>
+<li class="alt"><span class="comment">// initialize an instance of class NewKeypad </span><span>  </span></li>
+<li><span>Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 指纹识别模块 </span><span>  </span></li>
+<li class="alt"><span class="comment">// 串口发送子程序,收发串口,返回状态值,并写入q1,q2,q3至uint8_t[3]. </span><span>  </span></li>
+<li><span>uint8_t TxAndRsCmd(uint8_t packet[], uint8_t cmd, uint8_t p1 = 0, uint8_t p2 = 0, uint8_t p3 = 0, uint8_t p4 = 0)   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  </span><span class="comment">// 发送段 </span><span>  </span></li>
+<li class="alt"><span>  uint8_t chk = 0;   </span></li>
+<li><span>     </span></li>
+<li class="alt"><span>  chk ^= cmd;   </span></li>
+<li><span>  chk ^= p1;   </span></li>
+<li class="alt"><span>  chk ^= p2;   </span></li>
+<li><span>  chk ^= p3;   </span></li>
+<li class="alt"><span>  chk ^= p4;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  Serial1.write((uint8_t)CMD_HEAD);   </span></li>
+<li><span>  Serial1.write((uint8_t)cmd);   </span></li>
+<li class="alt"><span>  Serial1.write((uint8_t)p1);   </span></li>
+<li><span>  Serial1.write((uint8_t)p2);   </span></li>
+<li class="alt"><span>  Serial1.write((uint8_t)p3);   </span></li>
+<li><span>  Serial1.write((uint8_t)p4);   </span></li>
+<li class="alt"><span>  Serial1.write((uint8_t)chk);   </span></li>
+<li><span>  Serial1.write((uint8_t)CMD_TAIL);   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="comment">// 接收段 </span><span>  </span></li>
+<li class="alt"><span>  </span><span class="datatypes">int</span><span> timer = 0;   </span></li>
+<li><span>  uint8_t reply[8], idx = 0;   </span></li>
+<li class="alt"><span>  </span><span class="keyword">while</span><span> (</span><span class="keyword">true</span><span>) {   </span></li>
+<li><span>    </span><span class="keyword">if</span><span> (timer &gt;= TIMEOUT) </span><span class="keyword">return</span><span> ACK_TIMEOUT;   </span></li>
+<li class="alt"><span>    </span><span class="keyword">while</span><span> (!Serial1.available()) {   </span></li>
+<li><span>      delay(1);   </span></li>
+<li class="alt"><span>      timer++;   </span></li>
+<li><span>      </span><span class="keyword">if</span><span> (timer &gt;= TIMEOUT) </span><span class="keyword">return</span><span> ACK_TIMEOUT;   </span></li>
+<li class="alt"><span>    }   </span></li>
+<li><span>    reply[idx] = Serial1.read();   </span></li>
+<li class="alt"><span>    </span><span class="keyword">if</span><span> ((idx == 0) &amp;&amp; (reply[0] != CMD_HEAD)){   </span></li>
+<li><span>      timer++;   </span></li>
+<li class="alt"><span>      delay(1);   </span></li>
+<li><span>      </span><span class="keyword">continue</span><span>;   </span></li>
+<li class="alt"><span>    }   </span></li>
+<li><span>    idx++;   </span></li>
+<li class="alt"><span>    </span><span class="keyword">if</span><span> (idx &gt;= 8) {   </span></li>
+<li><span>      chk = 0;   </span></li>
+<li class="alt"><span>      </span><span class="datatypes">int</span><span> i;   </span></li>
+<li><span>      </span><span class="keyword">for</span><span>(i = 1; i &lt;= 5; i++){   </span></li>
+<li class="alt"><span>        chk ^= reply[i];   </span></li>
+<li><span>      }   </span></li>
+<li class="alt"><span>      </span><span class="keyword">if</span><span>(reply[1] != cmd || reply[6] != chk || reply[7] != CMD_TAIL){   </span></li>
+<li><span>        </span><span class="keyword">return</span><span> ACK_FAIL;   </span></li>
+<li class="alt"><span>      }   </span></li>
+<li><span>      </span><span class="keyword">for</span><span> (i = 0; i &lt; 3; i++) {   </span></li>
+<li class="alt"><span>        packet[i] = reply[2+i];   </span></li>
+<li><span>      }   </span></li>
+<li class="alt"><span>      </span><span class="keyword">return</span><span> ACK_SUCCESS;   </span></li>
+<li><span>    }   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  </span><span class="keyword">return</span><span> ACK_FAIL;   </span></li>
+<li class="alt"><span>}   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="comment">// 指纹添加子程序,返回是否成功,参数k为用户序号. </span><span>  </span></li>
+<li><span>uint8_t addUser(</span><span class="datatypes">int</span><span> k, uint8_t level = ACK_NORMAL_USER)   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  uint8_t p1, p2, p3;   </span></li>
+<li class="alt"><span>  uint8_t m = ACK_NOTHING;   </span></li>
+<li><span>  uint8_t cmd;   </span></li>
+<li class="alt"><span>  uint8_t cmdAdd[] = {CMD_ADD_1, CMD_ADD_2, CMD_ADD_3};   </span></li>
+<li><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">for</span><span> (i = 0; i &lt; 3; i++){   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>    cmd = cmdAdd[i], p1 = (k &gt;&gt; 8), p2 = k, p3 = level;   </span></li>
+<li class="alt"><span>    uint8_t packet[] = {ACK_NOTHING, ACK_NOTHING, ACK_NOTHING};   </span></li>
+<li><span>    </span><span class="keyword">for</span><span>(</span><span class="datatypes">int</span><span> j = 0; j &lt; 3; j++){   </span></li>
+<li class="alt"><span>      </span><span class="keyword">if</span><span>(m != ACK_SUCCESS || packet[2] != ACK_SUCCESS){   </span></li>
+<li><span>        m = TxAndRsCmd(packet, cmd, p1, p2, p3);   </span></li>
+<li class="alt"><span>        </span><span class="keyword">if</span><span>(m == ACK_SUCCESS &amp;&amp; packet[2] == ACK_SUCCESS){   </span></li>
+<li><span>          printStage((i+1)*4);   </span></li>
+<li class="alt"><span>          </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>        }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(packet[2] == ACK_USER_EXIST || packet[2] == ACK_FULL){   </span></li>
+<li class="alt"><span>          </span><span class="keyword">return</span><span> packet[2];   </span></li>
+<li><span>        }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(j &gt;= 2){   </span></li>
+<li class="alt"><span>          </span><span class="keyword">return</span><span> ((m == ACK_SUCCESS)? (packet[2]): (m));   </span></li>
+<li><span>        }   </span></li>
+<li class="alt"><span>      }   </span></li>
+<li><span>    }   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  </span><span class="keyword">return</span><span> ACK_SUCCESS;   </span></li>
+<li class="alt"><span>}   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="comment">// 删除用户子程序,返回是否成功,参数k为用户序号. </span><span>  </span></li>
+<li><span>uint8_t delUser(</span><span class="datatypes">int</span><span> k)   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  uint8_t m = ACK_NOTHING, p1, p2;   </span></li>
+<li class="alt"><span>  uint8_t cmd;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  uint8_t packet[] = {ACK_NOTHING, ACK_NOTHING, ACK_NOTHING};   </span></li>
+<li><span>  cmd = CMD_DEL, p1 = (k &gt;&gt; 8), p2 = k;   </span></li>
+<li class="alt"><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">for</span><span>(i = 0; i &lt; 3; i++){   </span></li>
+<li><span>    </span><span class="keyword">if</span><span>(m != ACK_SUCCESS || packet[2] != ACK_SUCCESS){   </span></li>
+<li class="alt"><span>      m = TxAndRsCmd(packet, cmd, p1, p2);   </span></li>
+<li><span>      </span><span class="keyword">if</span><span>(m == ACK_SUCCESS &amp;&amp; packet[2] == ACK_SUCCESS){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>      }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(i &gt;= 2){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> ((m == ACK_SUCCESS)? (packet[2]): (m));   </span></li>
+<li><span>      }   </span></li>
+<li class="alt"><span>    }   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">return</span><span> ACK_SUCCESS;   </span></li>
+<li class="alt"><span>}   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="comment">// 清除所有用户子程序,返回是否成功. </span><span>  </span></li>
+<li><span>uint8_t clrAllUser(</span><span class="keyword">void</span><span>)   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  uint8_t m = ACK_NOTHING;   </span></li>
+<li class="alt"><span>  uint8_t cmd;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  uint8_t packet[] = {ACK_NOTHING, ACK_NOTHING, ACK_NOTHING};   </span></li>
+<li><span>  cmd = CMD_DEL_ALL;   </span></li>
+<li class="alt"><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">for</span><span>(i = 0; i &lt; 3; i++){   </span></li>
+<li><span>    </span><span class="keyword">if</span><span>(m != ACK_SUCCESS || packet[2] != ACK_SUCCESS){   </span></li>
+<li class="alt"><span>      m = TxAndRsCmd(packet, cmd);   </span></li>
+<li><span>      </span><span class="keyword">if</span><span>(m == ACK_SUCCESS &amp;&amp; packet[2] == ACK_SUCCESS){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>      }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(i &gt;= 2){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> ((m == ACK_SUCCESS)? (packet[2]): (m));   </span></li>
+<li><span>      }   </span></li>
+<li class="alt"><span>    }   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">return</span><span> ACK_SUCCESS;   </span></li>
+<li class="alt"><span>}   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="comment">// 取用户总数子程序,返回是否成功,赋*t值为用户总数,参数*t为用户总数. </span><span>  </span></li>
+<li><span>uint8_t getUserCount(</span><span class="datatypes">int</span><span> *t)   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  uint8_t m = ACK_NOTHING;   </span></li>
+<li class="alt"><span>  uint8_t cmd;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  uint8_t packet[] = {ACK_NOTHING, ACK_NOTHING, ACK_NOTHING};   </span></li>
+<li><span>  cmd = CMD_USER_CNT;   </span></li>
+<li class="alt"><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">for</span><span>(i = 0; i &lt; 3; i++){   </span></li>
+<li><span>    </span><span class="keyword">if</span><span>(m != ACK_SUCCESS || packet[2] != ACK_SUCCESS){   </span></li>
+<li class="alt"><span>      m = TxAndRsCmd(packet, cmd);   </span></li>
+<li><span>      </span><span class="keyword">if</span><span>(m == ACK_SUCCESS &amp;&amp; packet[2] == ACK_SUCCESS){   </span></li>
+<li class="alt"><span>        </span><span class="datatypes">int</span><span> k = packet[0];   </span></li>
+<li><span>        k &lt;&lt;= 8;   </span></li>
+<li class="alt"><span>        k |= packet[1];   </span></li>
+<li><span>        *t = k;   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> ACK_SUCCESS;   </span></li>
+<li><span>      }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(i &gt;= 2){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> ((m == ACK_SUCCESS)? (packet[2]): (m));   </span></li>
+<li><span>      }   </span></li>
+<li class="alt"><span>    }   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span><span class="keyword">return</span><span> ACK_FAIL;   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 指纹1:N比对子程序,返回是否成功,赋*t值为用户id,参数*t为用户id,参数*level为用户等级. </span><span>  </span></li>
+<li class="alt"><span>uint8_t matchUser(</span><span class="datatypes">int</span><span> *t, uint8_t *level)   </span></li>
+<li><span>{   </span></li>
+<li class="alt"><span>  uint8_t m = ACK_NOTHING;   </span></li>
+<li><span>  uint8_t cmd;   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  uint8_t packet[] = {ACK_NOTHING, ACK_NOTHING, ACK_NOTHING};   </span></li>
+<li class="alt"><span>  cmd = CMD_MATCH;   </span></li>
+<li><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">for</span><span>(i = 0; i &lt; 3; i++){   </span></li>
+<li class="alt"><span>    </span><span class="keyword">if</span><span>(m != ACK_SUCCESS || packet[2] == ACK_TIMEOUT){   </span></li>
+<li><span>      m = TxAndRsCmd(packet, cmd);   </span></li>
+<li class="alt"><span>      </span><span class="keyword">if</span><span>(m == ACK_SUCCESS &amp;&amp; packet[2] != ACK_NO_USER &amp;&amp; packet[2] != ACK_TIMEOUT){   </span></li>
+<li><span>        </span><span class="datatypes">int</span><span> k = packet[0];   </span></li>
+<li class="alt"><span>        k &lt;&lt;= 8;   </span></li>
+<li><span>        k |= packet[1];   </span></li>
+<li class="alt"><span>        *t = k;   </span></li>
+<li><span>        *level = packet[2];   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> ACK_SUCCESS;   </span></li>
+<li><span>      }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(packet[2] == ACK_NO_USER){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> packet[2];   </span></li>
+<li><span>      }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(i &gt;= 2){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> ((m == ACK_SUCCESS)? (packet[2]): (m));   </span></li>
+<li><span>      }   </span></li>
+<li class="alt"><span>    }   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span><span class="keyword">return</span><span> ACK_FAIL;   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span class="comment">// 指纹1:N比对子程序,返回是否成功,赋*t值为用户id,参数*t为用户id. </span><span>  </span></li>
+<li><span>uint8_t matchUser(</span><span class="datatypes">int</span><span> *t)   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  uint8_t m = ACK_NOTHING;   </span></li>
+<li class="alt"><span>  uint8_t cmd;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  uint8_t packet[] = {ACK_NOTHING, ACK_NOTHING, ACK_NOTHING};   </span></li>
+<li><span>  cmd = CMD_MATCH;   </span></li>
+<li class="alt"><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">for</span><span>(i = 0; i &lt; 3; i++){   </span></li>
+<li><span>    </span><span class="keyword">if</span><span>(m != ACK_SUCCESS || packet[2] == ACK_TIMEOUT){   </span></li>
+<li class="alt"><span>      m = TxAndRsCmd(packet, cmd);   </span></li>
+<li><span>      </span><span class="keyword">if</span><span>(m == ACK_SUCCESS &amp;&amp; packet[2] != ACK_NO_USER &amp;&amp; packet[2] != ACK_TIMEOUT){   </span></li>
+<li class="alt"><span>        </span><span class="datatypes">int</span><span> k = packet[0];   </span></li>
+<li><span>        k &lt;&lt;= 8;   </span></li>
+<li class="alt"><span>        k |= packet[1];   </span></li>
+<li><span>        *t = k;   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> ACK_SUCCESS;   </span></li>
+<li><span>      }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(packet[2] == ACK_NO_USER){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> packet[2];   </span></li>
+<li><span>      }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(i &gt;= 2){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> ((m == ACK_SUCCESS)? (packet[2]): (m));   </span></li>
+<li><span>      }   </span></li>
+<li class="alt"><span>    }   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span><span class="keyword">return</span><span> ACK_FAIL;   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 取用户权限子程序,返回是否成功,赋*t值为用户总数,参数*t为用户总数. </span><span>  </span></li>
+<li class="alt"><span>uint8_t userLevel(</span><span class="datatypes">int</span><span> *t)   </span></li>
+<li><span>{   </span></li>
+<li class="alt"><span>  uint8_t m = ACK_NOTHING;   </span></li>
+<li><span>  uint8_t cmd;   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  uint8_t packet[] = {ACK_NOTHING, ACK_NOTHING, ACK_NOTHING};   </span></li>
+<li class="alt"><span>  cmd = CMD_MATCH;   </span></li>
+<li><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">for</span><span>(i = 0; i &lt; 3; i++){   </span></li>
+<li class="alt"><span>    </span><span class="keyword">if</span><span>(m != ACK_SUCCESS || packet[2] == ACK_TIMEOUT){   </span></li>
+<li><span>      m = TxAndRsCmd(packet, cmd);   </span></li>
+<li class="alt"><span>      </span><span class="keyword">if</span><span>(m == ACK_SUCCESS &amp;&amp; packet[2] != ACK_NO_USER &amp;&amp; packet[2] != ACK_TIMEOUT){   </span></li>
+<li><span>        *t = packet[2];   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> ACK_SUCCESS;   </span></li>
+<li><span>      }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(packet[2] == ACK_NO_USER){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> packet[2];   </span></li>
+<li><span>      }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(i &gt;= 2){   </span></li>
+<li class="alt"><span>        </span><span class="keyword">return</span><span> ((m == ACK_SUCCESS)? (packet[2]): (m));   </span></li>
+<li><span>      }   </span></li>
+<li class="alt"><span>    }   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span><span class="keyword">return</span><span> ACK_FAIL;   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 指纹识别模块结束 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 在5110上的第n行像素起表示阶段,参数n为第n行像素,参数s为现阶段,共有12阶段. </span><span>  </span></li>
+<li class="alt"><span class="keyword">void</span><span> printStage(</span><span class="datatypes">int</span><span> s, </span><span class="datatypes">int</span><span> r)   </span></li>
+<li><span>{   </span></li>
+<li class="alt"><span>myGLCD.print(</span><span class="string">“[“</span><span>, 0, r);   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="keyword">for</span><span>(</span><span class="datatypes">int</span><span> i=1; i&lt;13 &amp;&amp; i&lt;s; i++){   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“=”</span><span>, i*6, r);   </span></li>
+<li class="alt"><span>}   </span></li>
+<li><span class="keyword">if</span><span> (s=12) {   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“=”</span><span>, 72, r);   </span></li>
+<li><span>}</span><span class="keyword">else</span><span>{   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“&gt;”</span><span>, s*6, r);   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>myGLCD.print(</span><span class="string">“]”</span><span>, 78, r);   </span></li>
+<li class="alt"><span>myGLCD.update();   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 在5110的(0, 28)处打印”Mr. xxx!”信息,参数为人员id,之后应有myGLCD.update()函数上传. </span><span>  </span></li>
+<li class="alt"><span class="keyword">void</span><span> printPeople(</span><span class="datatypes">int</span><span> peoid)   </span></li>
+<li><span>{   </span></li>
+<li class="alt"><span>  String peoName[16] = {   </span></li>
+<li><span>    </span><span class="string">“Mr. Cui!”</span><span>,</span><span class="string">“Mr. Cui!”</span><span>,</span><span class="string">“Mr. Lin!”</span><span>,</span><span class="string">“Mr. Lin!”</span><span>,</span><span class="string">“Mr. Jiang!”</span><span>,</span><span class="string">“Mr. Jiang!”</span><span>,</span><span class="string">“Mr. Yan!”</span><span>,</span><span class="string">“Mr. Yan!”</span><span>,</span><span class="string">“Mr. Hu!”</span><span>,</span><span class="string">“Mr. Hu!”</span><span>,</span><span class="string">“Mr. Zhao!”</span><span>,</span><span class="string">“Mr. Zhao!”</span><span>,</span><span class="string">“Mr. Shang!”</span><span>,</span><span class="string">“Mr. Shang!”</span><span>,</span><span class="string">“Mr. Zhong!”</span><span>,</span><span class="string">“Mr. Zhong!”</span><span>  </span></li>
+<li class="alt"><span>  };   </span></li>
+<li><span>  myGLCD.print(peoName[peoid], 0, 28);   </span></li>
+<li class="alt"><span>}   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="comment">// 获得6位密码,返回六位字符串,参数gskask为输入提示. </span><span>  </span></li>
+<li><span>String getSixKeys(String gskask)   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  gskBack:   </span></li>
+<li class="alt"><span>  myGLCD.clrScr();   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>  myGLCD.print(gskask, 0, 0);   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>  </span><span class="datatypes">int</span><span> gsk = 0;   </span></li>
+<li><span>  </span><span class="datatypes">char</span><span> gskpw[6];   </span></li>
+<li class="alt"><span>  </span><span class="keyword">while</span><span>(gsk &lt;= 5){   </span></li>
+<li><span>    </span><span class="datatypes">char</span><span> gskkey = keypad.waitForKey();   </span></li>
+<li class="alt"><span>    gskpw[gsk] = gskkey;   </span></li>
+<li><span>    </span><span class="keyword">if</span><span>(String(gskkey) == </span><span class="string">“*”</span><span>){</span><span class="keyword">goto</span><span> gskBack;}   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“*”</span><span>, gsk*6, 8);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>    gsk++;   </span></li>
+<li><span>    delay(50);   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li class="alt"><span>  String sixKeys;   </span></li>
+<li><span>  </span><span class="keyword">for</span><span>(i=0;i&lt;=5;i++){   </span></li>
+<li class="alt"><span>    sixKeys = sixKeys + String(gskpw[i]);   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span><span class="keyword">return</span><span> sixKeys;   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 舵机驱动模块 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="datatypes">int</span><span> servopin = 35;</span><span class="comment">// 舵机方波输出 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="comment">// 舵机脉冲发生函数,输出控制舵机的方波,参数angle为转动度数,值的范围为0到165. </span><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">void</span><span> servopulse(</span><span class="datatypes">int</span><span> angle)   </span></li>
+<li><span>  {   </span></li>
+<li class="alt"><span>    </span><span class="datatypes">int</span><span> pulsewidth=(angle*11)+500;  </span><span class="comment">// 将角度转化为500-2480的脉宽值 </span><span>  </span></li>
+<li><span>    digitalWrite(servopin,HIGH);    </span><span class="comment">// 将舵机接口电平至高 </span><span>  </span></li>
+<li class="alt"><span>    delayMicroseconds(pulsewidth);  </span><span class="comment">// 延时脉宽值的微秒数 </span><span>  </span></li>
+<li><span>    digitalWrite(servopin,LOW);     </span><span class="comment">// 将舵机接口电平至低 </span><span>  </span></li>
+<li class="alt"><span>    delayMicroseconds(20000-pulsewidth);   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="comment">// 舵机驱动函数,调用void servopulse(int angle),参数angle为转动度数,值的范围为0到165,参数time为转动时间,以毫秒为单位,应为20的倍数. </span><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">void</span><span> servoDrive(</span><span class="datatypes">int</span><span> angle,</span><span class="datatypes">int</span><span> time)   </span></li>
+<li><span>  {   </span></li>
+<li class="alt"><span>    time /= 20;   </span></li>
+<li><span>    </span><span class="comment">// 值的范围为0到165 </span><span>  </span></li>
+<li class="alt"><span>    </span><span class="comment">// 发送time个脉冲 </span><span>  </span></li>
+<li><span>    </span><span class="keyword">for</span><span>(</span><span class="datatypes">int</span><span> i=0;i&lt;time;i++)   </span></li>
+<li class="alt"><span>    {   </span></li>
+<li><span>      </span><span class="comment">// 引用脉冲函数 </span><span>  </span></li>
+<li class="alt"><span>      servopulse(angle);   </span></li>
+<li><span>    }   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span class="comment">// 舵机驱动模块结束 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="keyword">void</span><span> unlock()   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  myGLCD.clrScr();   </span></li>
+<li class="alt"><span>  myGLCD.update();   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“Waiting!”</span><span>, 21, 0);   </span></li>
+<li class="alt"><span>  myGLCD.update();   </span></li>
+<li><span>  </span><span class="datatypes">int</span><span> id = 1000;   </span></li>
+<li class="alt"><span>  uint8_t m;   </span></li>
+<li><span>  m = matchUser(&amp;id);   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">if</span><span>(id != 1000 &amp;&amp; m == ACK_SUCCESS){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“ComeIn!”</span><span>, 21, 8);   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“Welcome,”</span><span>, 0, 20);   </span></li>
+<li class="alt"><span>    printPeople(id);   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“ID:”</span><span>, 0, 40);   </span></li>
+<li class="alt"><span>    myGLCD.print(String(id), 18, 40);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>    servoDrive(20,3000);   </span></li>
+<li><span>    delay(1500);   </span></li>
+<li class="alt"><span>    servoDrive(90,2000);   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_NO_USER){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“Sorry!”</span><span>, 21, 8);   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“FngrUndefined!”</span><span>, 0, 16);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>    delay(1500);   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  myGLCD.clrScr();   </span></li>
+<li class="alt"><span>  myGLCD.update();   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="keyword">void</span><span> adminAddUser()   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  myGLCD.clrScr();   </span></li>
+<li class="alt"><span>  myGLCD.update();   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">”   Add User   “</span><span>, 0, 0);   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“Input the ID: “</span><span>, 0, 8);   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“(0~400, and   “</span><span>, 0, 16);   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“\”#\” for End)”</span><span>, 0, 24);   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“*=&gt; BackToMenu”</span><span>, 0, 40);   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  uint8_t out = 0;   </span></li>
+<li class="alt"><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li><span>  </span><span class="datatypes">char</span><span> num[] = {0, 0, 0, 0};   </span></li>
+<li class="alt"><span>  </span><span class="datatypes">char</span><span> key;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">for</span><span>(i = 0; i &lt; 4; i++){   </span></li>
+<li><span>    key = keypad.waitForKey();   </span></li>
+<li class="alt"><span>    </span><span class="keyword">if</span><span>(i &gt;= 3 &amp;&amp; isdigit(key)){   </span></li>
+<li><span>      myGLCD.print(</span><span class="string">”   Overflow!  “</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>      myGLCD.update();   </span></li>
+<li><span>      delay(500);   </span></li>
+<li class="alt"><span>      out = 1;   </span></li>
+<li><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li class="alt"><span>    }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(isdigit(key)){   </span></li>
+<li><span>      myGLCD.print(&amp;key, i*6, 32);   </span></li>
+<li class="alt"><span>      myGLCD.update();   </span></li>
+<li><span>      num[i] = key;   </span></li>
+<li class="alt"><span>    }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(key == ‘#’){   </span></li>
+<li><span>      num[i] = ‘\0’;   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>    }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(key == ‘*’){   </span></li>
+<li class="alt"><span>      myGLCD.print(</span><span class="string">”   Backing!   “</span><span>, 0, 32);   </span></li>
+<li><span>      myGLCD.update();   </span></li>
+<li class="alt"><span>      delay(500);   </span></li>
+<li><span>      out = 1;   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>    }</span><span class="keyword">else</span><span>{   </span></li>
+<li class="alt"><span>      myGLCD.print(</span><span class="string">”  Wrong Char  “</span><span>, 0, 32);   </span></li>
+<li><span>      myGLCD.update();   </span></li>
+<li class="alt"><span>      delay(500);   </span></li>
+<li><span>      out = 1;   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>    }   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  </span><span class="keyword">if</span><span>(out == 1)   </span></li>
+<li class="alt"><span>    </span><span class="keyword">return</span><span>;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  i = 0;   </span></li>
+<li><span>  </span><span class="datatypes">int</span><span> k = 0;   </span></li>
+<li class="alt"><span>  </span><span class="keyword">while</span><span>(isdigit(num[i])){   </span></li>
+<li><span>    k = k*10 + (num[i] – ‘0’);   </span></li>
+<li class="alt"><span>    i++;   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">if</span><span>(k&gt;=0 &amp;&amp; k&lt;=399){   </span></li>
+<li class="alt"><span>    ;   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span>{   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”   Overflow!  “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>    delay(500);   </span></li>
+<li><span>    </span><span class="keyword">return</span><span>;   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  myGLCD.clrScr();   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">”   Add User   “</span><span>, 0, 0);   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“Put on Your”</span><span>, 0, 8);   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“Finger!”</span><span>, 0, 16);   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  uint8_t m = addUser(k);   </span></li>
+<li class="alt"><span>  </span><span class="keyword">if</span><span>(m == ACK_SUCCESS){   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">”    SUCCESS!  “</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_USER_EXIST){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”  USER EXIST! “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_FULL){   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">”     FULL!    “</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_TIMEOUT){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”   TIMEOUT!   “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span>{   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“Unknown Error!”</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  delay(500);   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="keyword">void</span><span> adminDelUser()   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  myGLCD.clrScr();   </span></li>
+<li class="alt"><span>  myGLCD.update();   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">”   Del User   “</span><span>, 0, 0);   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“Input the ID: “</span><span>, 0, 8);   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“(0~400, and   “</span><span>, 0, 16);   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“\”#\” for End)”</span><span>, 0, 24);   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“*=&gt; BackToMenu”</span><span>, 0, 40);   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  uint8_t out = 0;   </span></li>
+<li class="alt"><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li><span>  </span><span class="datatypes">char</span><span> num[] = {0, 0, 0, 0};   </span></li>
+<li class="alt"><span>  </span><span class="datatypes">char</span><span> key;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">for</span><span>(i = 0; i &lt; 4; i++){   </span></li>
+<li><span>    key = keypad.waitForKey();   </span></li>
+<li class="alt"><span>    </span><span class="keyword">if</span><span>(i &gt;= 3 &amp;&amp; isdigit(key)){   </span></li>
+<li><span>      myGLCD.print(</span><span class="string">”   Overflow!  “</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>      myGLCD.update();   </span></li>
+<li><span>      delay(500);   </span></li>
+<li class="alt"><span>      out = 1;   </span></li>
+<li><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li class="alt"><span>    }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(isdigit(key)){   </span></li>
+<li><span>      myGLCD.print(&amp;key, i*6, 32);   </span></li>
+<li class="alt"><span>      myGLCD.update();   </span></li>
+<li><span>      num[i] = key;   </span></li>
+<li class="alt"><span>    }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(key == ‘#’){   </span></li>
+<li><span>      num[i] = ‘\0’;   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>    }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(key == ‘*’){   </span></li>
+<li class="alt"><span>      myGLCD.print(</span><span class="string">”   Backing!   “</span><span>, 0, 32);   </span></li>
+<li><span>      myGLCD.update();   </span></li>
+<li class="alt"><span>      delay(500);   </span></li>
+<li><span>      out = 1;   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>    }</span><span class="keyword">else</span><span>{   </span></li>
+<li class="alt"><span>      myGLCD.print(</span><span class="string">”  Wrong Char  “</span><span>, 0, 32);   </span></li>
+<li><span>      myGLCD.update();   </span></li>
+<li class="alt"><span>      delay(500);   </span></li>
+<li><span>      out = 1;   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>    }   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  </span><span class="keyword">if</span><span>(out == 1)   </span></li>
+<li class="alt"><span>    </span><span class="keyword">return</span><span>;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  i = 0;   </span></li>
+<li><span>  </span><span class="datatypes">int</span><span> k = 0;   </span></li>
+<li class="alt"><span>  </span><span class="keyword">while</span><span>(isdigit(num[i])){   </span></li>
+<li><span>    k = k*10 + (num[i] – ‘0’);   </span></li>
+<li class="alt"><span>    i++;   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">if</span><span>(k&gt;=0 &amp;&amp; k&lt;=399){   </span></li>
+<li class="alt"><span>    ;   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span>{   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”   Overflow!  “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>    delay(500);   </span></li>
+<li><span>    </span><span class="keyword">return</span><span>;   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  uint8_t m = delUser(k);   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">if</span><span>(m == ACK_SUCCESS){   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">”    SUCCESS!  “</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_USER_EXIST){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”  USER EXIST! “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_FULL){   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">”     FULL!    “</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_TIMEOUT){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”   TIMEOUT!   “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span>{   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“Unknown Error!”</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  delay(500);   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="keyword">void</span><span> adminClrAllUser()   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  myGLCD.clrScr();   </span></li>
+<li class="alt"><span>  myGLCD.update();   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">” Clr All User “</span><span>, 0, 0);   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“Input \”#ABC\”  “</span><span>, 0, 8);   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“for Yes:      “</span><span>, 0, 16);   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“*=&gt; BackToMenu”</span><span>, 0, 40);   </span></li>
+<li class="alt"><span>  myGLCD.update();   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  uint8_t out = 0;   </span></li>
+<li><span>  </span><span class="datatypes">int</span><span> i;   </span></li>
+<li class="alt"><span>  </span><span class="datatypes">char</span><span> num[] = {0, 0, 0, 0};   </span></li>
+<li><span>  </span><span class="datatypes">char</span><span> key;   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">for</span><span>(i = 0; i &lt; 4; i++){   </span></li>
+<li class="alt"><span>    key = keypad.waitForKey();   </span></li>
+<li><span>    </span><span class="keyword">if</span><span>(key == ‘*’){   </span></li>
+<li class="alt"><span>      myGLCD.print(</span><span class="string">”   Backing!   “</span><span>, 0, 32);   </span></li>
+<li><span>      myGLCD.update();   </span></li>
+<li class="alt"><span>      delay(500);   </span></li>
+<li><span>      out = 1;   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>    }</span><span class="keyword">else</span><span>{   </span></li>
+<li class="alt"><span>      myGLCD.print(&amp;key, i*6, 24);   </span></li>
+<li><span>      myGLCD.update();   </span></li>
+<li class="alt"><span>      num[i] = key;   </span></li>
+<li><span>    }   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  </span><span class="keyword">if</span><span>(out == 1)   </span></li>
+<li class="alt"><span>    </span><span class="keyword">return</span><span>;   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">if</span><span>(num[0] == ‘#’ &amp;&amp; num[1] == ‘A’ &amp;&amp; num[2] == ‘B’ &amp;&amp; num[3] == ‘C’){   </span></li>
+<li><span>    ;   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span>{   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">” Wrong Verify!”</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>    delay(500);   </span></li>
+<li class="alt"><span>    </span><span class="keyword">return</span><span>;   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  uint8_t m = clrAllUser();   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">if</span><span>(m == ACK_SUCCESS){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”    SUCCESS!  “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>    delay(500);   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_USER_EXIST){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”  USER EXIST! “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>    delay(500);   </span></li>
+<li><span>    </span><span class="keyword">return</span><span>;   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_FULL){   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">”     FULL!    “</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>    delay(500);   </span></li>
+<li class="alt"><span>    </span><span class="keyword">return</span><span>;   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_TIMEOUT){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”   TIMEOUT!   “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>    delay(500);   </span></li>
+<li><span>    </span><span class="keyword">return</span><span>;   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span>{   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“Unknown Error!”</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>    delay(500);   </span></li>
+<li class="alt"><span>    </span><span class="keyword">return</span><span>;   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="comment">// 间隔 </span><span>  </span></li>
+<li class="alt"><span>  myGLCD.clrScr();   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  myGLCD.print(</span><span class="string">” Clr All User “</span><span>, 0, 0);   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“Put on Your”</span><span>, 0, 8);   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“Finger!”</span><span>, 0, 16);   </span></li>
+<li class="alt"><span>  myGLCD.update();   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  m = addUser(1, ACK_MASTER_USER);   </span></li>
+<li><span>  </span><span class="keyword">if</span><span>(m == ACK_SUCCESS){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”    SUCCESS!  “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_USER_EXIST){   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">”  USER EXIST! “</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_FULL){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">”     FULL!    “</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_TIMEOUT){   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">”   TIMEOUT!   “</span><span>, 0, 32);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span>{   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“Unknown Error!”</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  delay(500);   </span></li>
+<li class="alt"><span>}   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="keyword">void</span><span> adminPanel()   </span></li>
+<li><span>{   </span></li>
+<li class="alt"><span>  </span><span class="keyword">while</span><span>(1){   </span></li>
+<li><span>    myGLCD.clrScr();   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“AdminPanel”</span><span>, 12, 0);   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“A=&gt; Add User”</span><span>, 0, 8);   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“B=&gt; Del User”</span><span>, 0, 16);   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“C=&gt; ClrAllUser”</span><span>, 0, 24);   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“*=&gt; Exit”</span><span>, 0, 32);   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“Input A,B or C”</span><span>, 0, 40);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>    uint8_t out = 0;   </span></li>
+<li><span>    </span><span class="datatypes">int</span><span> timer = 0;   </span></li>
+<li class="alt"><span>    </span><span class="keyword">switch</span><span>(keypad.waitForKey()){   </span></li>
+<li><span>    </span><span class="keyword">case</span><span> ‘A’:   </span></li>
+<li class="alt"><span>      adminAddUser();   </span></li>
+<li><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li class="alt"><span>    </span><span class="keyword">case</span><span> ‘B’:   </span></li>
+<li><span>      adminDelUser();   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>    </span><span class="keyword">case</span><span> ‘C’:   </span></li>
+<li class="alt"><span>      adminClrAllUser();   </span></li>
+<li><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li class="alt"><span>    </span><span class="keyword">case</span><span> ‘*’:   </span></li>
+<li><span>      out = 1;   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>    </span><span class="keyword">default</span><span>:   </span></li>
+<li class="alt"><span>      </span><span class="keyword">for</span><span>(</span><span class="datatypes">int</span><span> i = 0; i &lt; 3; i++){   </span></li>
+<li><span>        myGLCD.print(</span><span class="string">”              “</span><span>, 0, 40);   </span></li>
+<li class="alt"><span>        myGLCD.update();   </span></li>
+<li><span>        delay(250);   </span></li>
+<li class="alt"><span>        myGLCD.print(</span><span class="string">“Input A,B or C”</span><span>, 0, 40);   </span></li>
+<li><span>        myGLCD.update();   </span></li>
+<li class="alt"><span>        delay(250);   </span></li>
+<li><span>      }   </span></li>
+<li class="alt"><span>         </span></li>
+<li><span>      </span><span class="keyword">if</span><span>(timer &gt;= 2){   </span></li>
+<li class="alt"><span>        out = 1;   </span></li>
+<li><span>        myGLCD.print(</span><span class="string">”              “</span><span>, 0, 40);   </span></li>
+<li class="alt"><span>        myGLCD.update();   </span></li>
+<li><span>        myGLCD.print(</span><span class="string">“Error for 3rd!”</span><span>, 0, 40);   </span></li>
+<li class="alt"><span>        myGLCD.update();   </span></li>
+<li><span>        delay(500);   </span></li>
+<li class="alt"><span>        myGLCD.print(</span><span class="string">”  Auto Exit!  “</span><span>, 0, 40);   </span></li>
+<li><span>        myGLCD.update();   </span></li>
+<li class="alt"><span>        delay(500);   </span></li>
+<li><span>      }   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>      timer++;   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>    }   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>    </span><span class="keyword">if</span><span>(out == 1)   </span></li>
+<li class="alt"><span>      </span><span class="keyword">break</span><span>;   </span></li>
+<li><span>  }   </span></li>
+<li class="alt"><span>  myGLCD.clrScr();   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>}   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span class="keyword">void</span><span> adminVerify()   </span></li>
+<li><span>{   </span></li>
+<li class="alt"><span>  myGLCD.clrScr();   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  myGLCD.print(</span><span class="string">“AdminPanel”</span><span>, 12, 0);   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“PutOnYourFinger!”</span><span>, 0, 8);   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="datatypes">int</span><span> id = 1000;   </span></li>
+<li class="alt"><span>  uint8_t level = ACK_ALL_USER;   </span></li>
+<li><span>  uint8_t m;   </span></li>
+<li class="alt"><span>  m = matchUser(&amp;id, &amp;level);   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>  </span><span class="keyword">if</span><span>(id != 1000 &amp;&amp; m == ACK_SUCCESS &amp;&amp; level == ACK_MASTER_USER){   </span></li>
+<li><span>    adminPanel();   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_NO_USER){   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“Error!”</span><span>, 21, 16);   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“FngrUndefined!”</span><span>, 0, 24);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>    delay(1500);   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(level != ACK_MASTER_USER){   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“Error!”</span><span>, 21, 16);   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“YouAreNotAdmin!”</span><span>, 0, 24);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>    delay(1500);   </span></li>
+<li class="alt"><span>  }</span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span>(m == ACK_TIMEOUT){   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“Error!”</span><span>, 21, 16);   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“Timeout!”</span><span>, 18, 16);   </span></li>
+<li><span>    myGLCD.update();   </span></li>
+<li class="alt"><span>    delay(1500);   </span></li>
+<li><span>  }</span><span class="keyword">else</span><span>{   </span></li>
+<li class="alt"><span>    myGLCD.print(</span><span class="string">“Error!”</span><span>, 21, 16);   </span></li>
+<li><span>    myGLCD.print(</span><span class="string">“UnknownError!”</span><span>, 0, 16);   </span></li>
+<li class="alt"><span>    myGLCD.update();   </span></li>
+<li><span>    delay(1500);   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  myGLCD.clrScr();   </span></li>
+<li class="alt"><span>  myGLCD.update();   </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="keyword">void</span><span> setup()   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  pinMode(servopin,OUTPUT);</span><span class="comment">// 设定舵机接口为输出接口 </span><span>  </span></li>
+<li class="alt"><span>  pinMode(SWITCH_PIN,INPUT_PULLUP);</span><span class="comment">// 设定微动开关接口为输入接口,并上拉 </span><span>  </span></li>
+<li><span>  pinMode(POWER_PIN,OUTPUT);</span><span class="comment">//指纹模块电源接在这里 </span><span>  </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  Serial1.begin(19200);   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="comment">// LCD5110初始化 </span><span>  </span></li>
+<li class="alt"><span>  myGLCD.InitLCD();   </span></li>
+<li><span>  myGLCD.setFont(SmallFont);   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>}   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span class="keyword">void</span><span> loop()   </span></li>
+<li class="alt"><span>{   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">” Press Sensor “</span><span>, 0, 4);   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“to Unlock Door”</span><span>, 0, 12);   </span></li>
+<li><span>  myGLCD.print(</span><span class="string">” Press # Key  “</span><span>, 0, 28);   </span></li>
+<li class="alt"><span>  myGLCD.print(</span><span class="string">“to Login admin”</span><span>, 0, 36);   </span></li>
+<li><span>  myGLCD.update();   </span></li>
+<li class="alt"><span>  </span></li>
+<li><span>  </span><span class="keyword">if</span><span>(digitalRead(SWITCH_PIN) == 0){   </span></li>
+<li class="alt"><span>    digitalWrite(POWER_PIN,HIGH);   </span></li>
+<li><span>    delay(500);   </span></li>
+<li class="alt"><span>    unlock();   </span></li>
+<li><span>    digitalWrite(POWER_PIN,LOW);   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  </span><span class="keyword">if</span><span>(keypad.getKey() == ‘#’){   </span></li>
+<li class="alt"><span>    digitalWrite(POWER_PIN,HIGH);   </span></li>
+<li><span>    delay(500);   </span></li>
+<li class="alt"><span>    adminVerify();   </span></li>
+<li><span>    digitalWrite(POWER_PIN,LOW);   </span></li>
+<li class="alt"><span>  }   </span></li>
+<li><span>  </span></li>
+<li class="alt"><span>}   </span></li>
+</ol>
+</div>
+<p>PS.在这种文章中间一定要加&lt;!–more–&gt;……</p>

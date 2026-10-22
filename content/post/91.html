@@ -1,0 +1,79 @@
+{
+  "title": "不用插件实现WordPress代码高亮显示 – 转",
+  "date": "2013-11-09T20:23:23+08:00",
+  "lastmod": "2014-09-03T23:52:21+08:00",
+  "url": "/post/wordpress-code-highlight/",
+  "draft": false,
+  "description": "转载用 CodeRenderUnmi 生成高亮 HTML、接入 WordPress 主题样式的方法，并记录复制代码时需要留意的标点问题。",
+  "categories": [
+    "开发与开源"
+  ],
+  "tags": [
+    "WordPress",
+    "转载"
+  ],
+  "giscusDiscussion": 5,
+  "seoTitle": "不用插件实现WordPress代码高亮显示 - 转 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-91",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/wordpress-code-highlight/"
+}
+
+
+<p>在<a href="/post/arduino-tfs-m74a-lock/" target="_blank" title="利用十指科技的TFS-M74A指纹模块制作Arduino指纹锁">上一篇</a>文章中，我贴了一段<del datetime="2014-09-03T15:51:52+00:00">800+行</del>短得不可思议的的C语言代码。<br/>
+所以，现场找了一个不用插件实现WordPress代码高亮显示的办法。<br/>
+现转载如下：<br/>
+</p>
+<blockquote><p>偶尔在日志中加入一些代码，感觉完全没必要安装代码高亮插件，万一某天不用插件了，页面可能会很乱。其实大部分插件都是在代码中强行加入一些标签，然后用CSS定义样式，通过查看页面源文件可以清楚地看到。</p>
+<p>今天推荐的是一款本地转换代码高亮显示的小工具：<a href="http://zmingcx.com/wordpress-code-highlight.html" rel="noopener noreferrer"><strong>CodeRenderUnmi</strong></a></p>
+<div id="down"><a href="http://zmingcx.com/wordpress-code-highlight.html" id="download" rel="noopener noreferrer" title="下载链接">下载地址</a></div>
+<p>本程序是基于 dp.SyntaxHighlighter 写的代码语法着色的工具。支持的语言有:</p>
+<p>java/xml/sql/jscript/css/cpp/c#/python/vb/perl/php/ruby/delphi。</p>
+<p><a href="http://zmingcx.com/code/coderender.html" rel="noopener noreferrer" target="_blank">在线代码高亮转换</a></p>
+<p>可方便用于你的博客中粘贴代码，只要自定相应的样式 (<span>highlight.css</span> 的内容，.Text 支持自定义样式或在模板里加上语法样式)，然后复制用这个工具生成的 HTML 代码就能让你的代码着高亮显示。 可以加入更多语种的支持，本程序就是在 dp.SyntaxHighlighter 的基础上扩展了对 Perl 语言的支持，网上可以找到相应语法的 JS 代码和 CSS。语言扩展支持通过在 shCore.js 和 highlight.css 加入相应代码即可。</p>
+<p>程序界面</p>
+<p><a class="cboxElement" href="http://media3.ihompy.com/201008/1/101045_1280647826QDrx.jpg" rel="noopener noreferrer">原文配图（外部图片暂不可用）</a></p>
+<p>操作很容易，Source Code 中贴上你要着色的代码，然后选择语种，点击 Render 按钮就会在 HTML Code 中生成相应的 HTML 代码，同时在 HTML Preview 中可以预览到效果。</p>
+<p>简要说明：Lang 下拉框可以选择所支持的语法，Options 右边的 Gutter、Controls、CollapseAll、FirstLine、Columns 是控制生成的额外的元素，逐一点试试就知道了。每个内容显示(输入)区都提供了 Copy/Paste/Clear 快捷操作链接，还有一个总的 Clear 按钮。</p>
+<p>Copy生成 的HTML 代码，在日志编辑窗口切换到HTML源代码编辑模式，粘贴就可以了。</p>
+<p>不过要想正确显示代码高亮还需在WordPress主题中加载样式文件“highlight.css”（在下载的压缩包中）</p>
+<p>方法：</p>
+<p>首先，把highlight.css上传到所使用主题目录中；</p>
+<p>其次：打开header.php，查找：</p>
+<div class="dp-highlighter">
+<ol class="dp-css">
+<li class="alt">&lt;link rel=<span class="string">“stylesheet”</span> type=<span class="string">“text/css”</span> href=<span class="string">“&lt;?php bloginfo(‘template_directory’); ?&gt;/style.css”</span> /&gt;</li>
+</ol>
+</div>
+<p>在后面添加：</p>
+<div class="dp-highlighter">
+<ol class="dp-css">
+<li class="alt">&lt;link rel=<span class="string">“stylesheet”</span> href=<span class="string">“&lt;?php bloginfo(‘template_url’); ?&gt;/highlight.css”</span> /&gt;</li>
+</ol>
+</div>
+<p><strong>当然，你也可以复制highlight.css中的所有代码到你主题style.css中，以上步骤就免了！</strong></p>
+<p>如认为默认的样式不符合自己的要求，可以<strong>通过</strong>修改“highlight.css”中的样式改变代码高亮、边框、背景等颜色，更个性化。</p>
+<p><span><strong>但需要注意的是Wordpress会自动把半角符号替换为全角，别人复制下来的函数代码标点是全角的，无法使用，切记！</strong></span></p>
+<p>解决办法：</p>
+<p>打开并编辑 wp-includes/formatting.php 文件，找到以下代码：</p>
+<div class="dp-highlighter">
+<ol class="dp-c">
+<li class="alt"><span class="comment">// static strings </span></li>
+<li><span class="vars">$curl</span> = <span class="func">str_replace</span>(<span class="vars">$static_characters</span>, <span class="vars">$static_replacements</span>, <span class="vars">$curl</span>);</li>
+<li class="alt"><span class="comment">// regular expressions </span></li>
+<li><span class="vars">$curl</span> = preg_replace(<span class="vars">$dynamic_characters</span>, <span class="vars">$dynamic_replacements</span>, <span class="vars">$curl</span>);</li>
+</ol>
+</div>
+<p>将<span class="vars">$curl</span> 开头的两句代码注释掉，如下：</p>
+<div class="dp-highlighter">
+<ol class="dp-c">
+<li><span class="comment">// static strings </span></li>
+<li class="alt"><span class="comment">//$curl = str_replace($static_characters, $static_replacements, $curl); </span></li>
+<li><span class="comment">// regular expressions </span></li>
+<li class="alt"><span class="comment">//$curl = preg_replace($dynamic_characters, $dynamic_replacements, $curl);</span></li>
+</ol>
+</div>
+</blockquote>
+<p>转自：<a href="http://zmingcx.com/wordpress-code-highlight.html" rel="noopener noreferrer" target="_blank" title="不用插件实现WordPress代码高亮显示">http://zmingcx.com/wordpress-code-highlight.html</a></p>

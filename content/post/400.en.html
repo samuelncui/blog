@@ -1,0 +1,33 @@
+{
+  "title": "Set 4k 10bit 120hz via HDMI with Ryzen 5700G & A520",
+  "date": "2023-04-03T18:21:13+08:00",
+  "lastmod": "2023-04-03T20:21:47+08:00",
+  "url": "/en/post/set-4k-10bit-120hz-via-hdmi-with-ryzen-5700g-a520/",
+  "draft": false,
+  "description": "Describes achieving 4K, 4:4:4, 10-bit, 120 Hz output from a Ryzen 5700G/A520 HTPC with an active DisplayPort-to-HDMI 2.1 adapter, while leaving questions about bandwidth and possible DSC use unresolved.",
+  "categories": [
+    "硬件与数码"
+  ],
+  "tags": [
+    "硬件",
+    "家庭影音",
+    "故障排查"
+  ],
+  "seoTitle": "Set 4k 10bit 120hz via HDMI with Ryzen 5700G & A520 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "images": [
+    "/wp-content/uploads/2023/04/IMG_4406.jpg"
+  ],
+  "author": "Samuel N Cui",
+  "translationKey": "post-400",
+  "originalLanguage": "en",
+  "giscusPath": "/post/set-4k-10bit-120hz-via-hdmi-with-ryzen-5700g-a520/"
+}
+
+
+
+<p class="wp-block-paragraph">I bought a Ryzen 5700G CPU with ASRock A520M-ITX/ac as my living room HTPC. With Sony 77A80J, I can’t even set color depth to 10bit with RBG4:4:4 at 4k 60hz, let alone at 4k 120hz. It said A520M-ITX/ac support HDMI ver 2.1 on ASRock’s website, but after changing several cables, the problem was not gone away. My conclusion is that the HDMI port’s bandwidth is likely limited to HDMI 2.0b. Limited by its 14.4Gbit/s bandwidth, 2.0b allows 4k 60hz 4:4:4 8bit(12.54) / 4k 60hz 4:2:2 10bit(10.45), but not allows 4k 60hz 4:4:4 10bit(15.68).</p>
+<p class="wp-block-paragraph">Ryzen 5700G has a DisplayPort 1.4 in its pinout, so if HDMI is not working, maybe DisplayPort can do the trick. So I bought an active DisplayPort 1.4 to HDMI 2.1 adaptor (see below). Notice that cheap ones may not do the job, as we need adaptors with HDMI 2.1 output. In my experience, the price is at least 100CNY on Taobao, maybe more on Amazon.</p>
+<figure class="wp-block-image size-full is-resized"><a href="/wp-content/uploads/2023/04/IMG_4406.jpg"><img alt="" class="wp-image-401" decoding="async" height="342" loading="lazy" src="/wp-content/uploads/2023/04/IMG_4406.jpg" width="342"/></a></figure>
+<p class="wp-block-paragraph">With this adaptor, I could set the color depth to 10bit in Adrenalin, and then set the refresh rate to 120hz in Windows display settings, so I got 4k 4:4:4 10bit at 120hz! Which is super weird, because 4k 4:4:4 10bit at 120hz needs 32.27Gbit/s, and DisplayPort 1.4 only has 25.92Gbit/s. This output setting can be confirmed in AVR. Maybe the port automatically enabled DSC? I don’t know.</p>
+<p class="wp-block-paragraph">But I achieved my goal after all. If you need higher color depth or refresh rate on your Ryzen 5xxxG, you can definitely try this method.</p>

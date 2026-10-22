@@ -1,0 +1,3 @@
+{{ with resources.Get "ts/scheme.ts" | js.Build (dict "minify" true) | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+{{ end }}

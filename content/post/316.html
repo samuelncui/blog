@@ -1,0 +1,45 @@
+{
+  "title": "SS 引导式自动安装脚本",
+  "date": "2017-02-01T23:02:36+08:00",
+  "lastmod": "2019-03-01T15:45:40+08:00",
+  "url": "/post/ss-引导式自动安装脚本/",
+  "draft": false,
+  "description": "介绍为 Ubuntu Server VPS 编写的交互式 Shadowsocks 部署脚本，将服务安装、BBR、TCP 调优和进程守护整合到同一流程。",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "Linux",
+    "网络",
+    "自动化"
+  ],
+  "seoTitle": "SS 引导式自动安装脚本 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-316",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/ss-引导式自动安装脚本/"
+}
+
+
+<p>之前网上的脚本大概都只有 Shadowsocks 本身的安装，如果买了一个新服务器，还要做很多其他的工作。</p>
+<p>昨天被宽带通的各种屏蔽搞的受不了了，想在阿里云国内的服务器上架个 SS 服务器，即使有各类脚本，最后还是要手动做各种调整。</p>
+<p>所以写了这个脚本，可以用在一般的 Ubuntu Server VPS 上。<br/>
+<br/>
+只需两步：</p>
+<pre>wget --no-check-certificate https://raw.githubusercontent.com/abc950309/ShadowsocksWizards/master/wizards.sh
+sudo bash wizards.sh</pre>
+<p>大家可以在这里看到这个项目：</p>
+<p><a href="https://github.com/abc950309/ShadowsocksWizards" rel="noopener noreferrer" target="_blank">https://github.com/abc950309/ShadowsocksWizards</a></p>
+<p>如果没有 VPS ，感觉 Vultr 还不错。洛杉矶节点即使在宽带通下也可以看 720p ，公司的网 1080p 没问题。 50USD 邀请码（需要先冲 5USD 能够获得）在此： <a href="https://www.vultr.com/?ref=7916057-4F" rel="noopener noreferrer" target="_blank">https://www.vultr.com/?ref=7916057-4F</a> 顺便也支持我一下。</p>
+<hr/>
+<p>主要特性：</p>
+<ul>
+<li>自动安装 shadowsocks-go，并询问是否更改默认配置</li>
+<li>自动安装 Google TCP BBR</li>
+<li>询问响应类型，并根据响应类型进行 TCP 优化</li>
+<li>自动添加每周重启，防止长时间开机后死机</li>
+<li>自动安装 supervisor 作为守护进程</li>
+<li>自动清理缓存文件</li>
+<li>默认监听 443，利用 GFW 对常用端口检查较弱提高速度</li>
+</ul>

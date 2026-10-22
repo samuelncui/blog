@@ -1,0 +1,29 @@
+{
+  "title": "You Cannot Use SATA Express via a ThinkPad T470p M.2 Tray",
+  "date": "2019-01-14T18:51:41+08:00",
+  "lastmod": "2019-01-14T18:52:20+08:00",
+  "url": "/en/post/无法通过-thinkpad-t470p-的-m-2-托盘使用-sata-express-接口/",
+  "draft": false,
+  "description": "Documents an unsuccessful attempt to use a ThinkPad T470p M.2 tray with a desktop SATA Express port, explaining the differing clock-signal arrangements and why the tray did not provide the hoped-for NVMe upgrade.",
+  "categories": [
+    "硬件与数码"
+  ],
+  "tags": [
+    "硬件",
+    "存储",
+    "故障排查"
+  ],
+  "giscusDiscussion": 12,
+  "seoTitle": "You Cannot Use SATA Express via a ThinkPad T470p M.2 Tray - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-360",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/无法通过-thinkpad-t470p-的-m-2-托盘使用-sata-express-接口/"
+}
+
+<p>The MSI C236M motherboard I bought earlier has a SATA Express port but no M.2 slot. SATA Express is a notoriously disappointing interface: after its introduction, hardly any manufacturers made SSDs for it, and motherboard makers stopped supporting it after only a short time.</p>
+<p>Wanting to install an NVMe SSD, I happened to come across the ThinkPad T470p's M.2 tray (FRU 01HY319). In the T470p, this tray can convert a SATA Express connection to M.2, albeit at a reduced PCI-E x2 bandwidth. I thought I had finally found a savior that might rescue my poor SATA Express motherboard.</p>
+<p>I bought one on Xianyu. When it arrived, I noticed the optional PCI-E clock contacts on its SATA Express connector, and my heart sank. I connected the SSD and tried it; sure enough, it did not work.</p>
+<p>Here is the background: when SATA Express was designed, concerns about instability in the transmitted PCI-E clock signal led to that signal being omitted. Instead, PCI-SIG was pushed to add SRIS (Separate Refclk Independent SSC), allowing operation without that clock signal. ASUS once offered an adapter that restored the clock signal to clockless PCI-E connections supporting SRIS, but it can no longer be found on the market. Lenovo's tray does not use this clock-restoration method; instead, it uses SATA Express's optional clock contacts (<a href="http://pinoutguide.com/HD/SATA_Express_pinout.shtml" rel="noopener noreferrer" target="_blank">see the definitions of contacts E7 and E8 on this page</a>) to take the PCI-E clock signal directly from the motherboard. Naturally, the SATA Express connections exposed by desktop motherboards do not have those contacts, so this does not work.</p>
+<p>So if any of you have a motherboard with SATA Express, I hope this serves as a warning: do not bother trying. It seems this route is a dead end... (forced smile)</p>

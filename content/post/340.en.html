@@ -1,0 +1,24 @@
+{
+  "title": "What nginx's port_in_redirect Option Does",
+  "date": "2017-11-30T11:55:59+08:00",
+  "lastmod": "2017-11-30T11:55:59+08:00",
+  "url": "/en/post/nginx-port_in_redirect-选项的用处/",
+  "draft": false,
+  "description": "A brief nginx configuration note on removing unwanted port numbers from trailing-slash redirects when a request passes through two proxy layers.",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "系统运维",
+    "网络",
+    "故障排查"
+  ],
+  "seoTitle": "What nginx's port_in_redirect Option Does - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-340",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/nginx-port_in_redirect-选项的用处/"
+}
+
+<p>With two layers of proxying, redirects that automatically add a trailing slash include a port number. Simply setting port_in_redirect to off fixes it~~</p>

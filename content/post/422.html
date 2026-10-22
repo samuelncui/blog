@@ -1,0 +1,46 @@
+{
+  "title": "acp2larkbot：通过 ACP 将 Lark 连接到 AI 智能体",
+  "date": "2026-06-01T19:03:52+08:00",
+  "lastmod": "2026-06-01T19:11:59+08:00",
+  "url": "/post/acp2larkbot-bridging-lark-to-ai-agents-over-acp/",
+  "draft": false,
+  "description": "介绍将 ACP 智能体接入 Lark 的桥接工具，支持流式回答、折叠工具调用面板，以及本地进程和远程 WebSocket 两种后端。",
+  "categories": [
+    "开发与开源"
+  ],
+  "tags": [
+    "AI",
+    "开源项目",
+    "自动化"
+  ],
+  "seoTitle": "acp2larkbot：通过 ACP 将 Lark 连接到 AI 智能体 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-422",
+  "originalLanguage": "en",
+  "giscusPath": "/post/acp2larkbot-bridging-lark-to-ai-agents-over-acp/"
+}
+
+<p class="wp-block-paragraph">如今，很多 AI 智能体都支持 <a href="https://github.com/google-cloud/agent-client-protocol" rel="noopener noreferrer">Agent Client Protocol（ACP）</a> ——它正逐渐成为智能体通信的通用接口。不过，大多数智能体没有聊天界面。一些智能体，例如 <a href="https://github.com/nousresearch/hermes-agent" rel="noopener noreferrer">Hermes</a> 或 <a href="https://github.com/openclaw/openclaw" rel="noopener noreferrer">OpenClaw</a>，支持将 Lark（飞书国际版）作为交互渠道，但集成往往不够完整：流式输出可能不顺畅，看不到工具调用过程，或者卡片渲染存在问题。</p>
+<p class="wp-block-paragraph"><strong>acp2larkbot</strong> 是一个通用桥接工具：把任何兼容 ACP 的智能体接到它上面，就能得到一个功能完整的 Lark 机器人，支持流式卡片、工具调用面板和清晰的错误展示。</p>
+<h2 class="wp-block-heading">工作原理</h2>
+<p class="wp-block-paragraph">你在 Lark 聊天中发送消息，acp2larkbot 通过 stdio 或 WebSocket 将其转发给 ACP 智能体。智能体的响应以动态卡片的形式流式返回聊天中。工具调用显示为可折叠的面板，最终回答则以打字机效果实时流式呈现。</p>
+<p class="wp-block-paragraph">卡片布局很简单：上方是操作面板，每次工具调用或处理步骤对应一个面板，默认折叠；下方是可滚动的回答区域。</p>
+<h2 class="wp-block-heading">快速开始</h2>
+<pre class="wp-block-code"><code># install
+curl -fsSL https://raw.githubusercontent.com/samuelncui/acp2larkbot/main/install.sh | bash
+
+# generate config (interactive)
+acp2larkbot init -o config.yaml
+
+# validate
+acp2larkbot test -c config.yaml
+
+# run
+acp2larkbot run -c config.yaml</code></pre>
+<p class="wp-block-paragraph">把配置指向任意 ACP 后端即可——可以是本地后端（<code>type: cmd</code>，作为子进程运行），也可以是远程后端（<code>type: network</code>，通过 WebSocket 连接）。同一个二进制程序可以处理这两种情况。</p>
+<h2 class="wp-block-heading">为什么不直接使用内置的 Lark 支持？</h2>
+<p class="wp-block-paragraph">直接支持 Lark 的智能体框架，往往只把 Lark 当作次要渠道。流式卡片经常显示为空白；工具调用要么看不见，要么混在一大段文字里；会话管理也不一致。acp2larkbot 专注于把一件事做好——成为最好的 Lark 机器人桥接工具，因此卡片渲染、会话处理和流式输出都是核心能力。</p>
+<p class="wp-block-paragraph">此外，对于支持 ACP、却不了解 Lark 的智能体，acp2larkbot 无需修改智能体本身，就能为其提供聊天界面。这是一个即接即用的桥接工具。</p>
+<h2 class="wp-block-head-block wp-block-heading">代码仓库</h2>
+<p class="wp-block-paragraph">源代码和详细文档见 <a href="https://github.com/samuelncui/acp2larkbot" rel="noopener noreferrer">github.com/samuelncui/acp2larkbot</a>.</p>

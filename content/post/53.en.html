@@ -1,0 +1,31 @@
+{
+  "title": "Why Postfix Keeps a Linux Server's CPU Usage High, and How to Fix It",
+  "date": "2013-07-24T21:11:26+08:00",
+  "lastmod": "2013-07-24T21:14:46+08:00",
+  "url": "/en/post/ubuntu-postfix-let-cpu-high/",
+  "draft": false,
+  "description": "An investigation into high server load uncovers over ten thousand spam messages in the Postfix queue and missing SMTP authentication—a lesson in checking mail-server security settings.",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "邮件服务",
+    "Linux",
+    "故障排查"
+  ],
+  "seoTitle": "Why Postfix Keeps a Linux Server's CPU Usage High, and How to Fix It - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-53",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/ubuntu-postfix-let-cpu-high/"
+}
+
+<p>Recently, whenever I logged in over SSH, the CPU load averages were always above 2. A look at top showed them well into the tens…<br/>
+Most of the resource-hungry processes belonged to the postfix user, so it was clearly the culprit.<br/>
+I checked in webmin and found over ten thousand spam messages in Postfix's mail queue… That was where all the resources were going…<br/>
+That gave me quite a scare… I thought my account had been compromised… But then I discovered that my SMTP server wasn't using authentication at all…<br/>
+Here's an SMTP authentication testing site, for future reference…</p>
+<blockquote><p><a href="http://www.antispam-ufrj.pads.ufrj.br/test-relay.html" rel="noopener noreferrer">http://www.antispam-ufrj.pads.ufrj.br/test-relay.html</a></p></blockquote>
+<p>Just search Baidu for SMTP authentication and such… There are plenty of tutorials…<br/>
+I guess I can't afford to cut corners on security next time. I wonder whether mail providers will end up blocking this whole IP range…</p>

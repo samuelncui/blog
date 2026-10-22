@@ -1,0 +1,31 @@
+{
+  "title": "如何使Z-push支持中文VCardDir",
+  "date": "2013-07-22T02:39:00+08:00",
+  "lastmod": "2013-07-24T21:14:23+08:00",
+  "url": "/post/如何使z-push支持中文vcarddir/",
+  "draft": false,
+  "description": "排查 Z-push VCardDir 的中文乱码，记录跳过多余字符转换的处理方法；手机新增条目时的文件命名问题仍未解决。",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "邮件服务",
+    "Linux",
+    "故障排查"
+  ],
+  "seoTitle": "如何使Z-push支持中文VCardDir - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-50",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/如何使z-push支持中文vcarddir/"
+}
+
+
+<p>Z-push是一个支持Exchange Active Sync协议的开源软件。可以将IMAP协议里的邮件或VCard之类的通过该协议发送至手机。<br/>
+本人希望使用其中的VCardDir功能，可惜无论是Windows生成的VCard文件还是Android生成的VCard文件，都无法正确解读中文…都是乱码。<br/>
+为了解决这一问题，我不得不现学了一天半的PHP语言…挨行检查过backend/vcardir.php 后，发现问题是在函数w2ui上了…<br/>
+由于为了照顾欧洲使用非标准拉丁字符的国家，w2ui函数把Windows下的非标准字符转换成Unicode。然而，中文并不包括在这一编码内，所以只好瞎转了…<br/>
+由于我的VCard直接是Unicode的，所以只需去掉此步骤。<br/>
+较方便的解决方法是把定义w2ui（以及一干类似函数）处（在其他地方，用搜索软件可搜索），把return直接改成输入参数，就一劳永逸了。<br/>
+但是当在手机上新添加条目时，仍无法自动命名VCard文件，还有待大神解决…</p>

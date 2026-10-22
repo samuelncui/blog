@@ -1,0 +1,30 @@
+{
+  "title": "无法通过 Thinkpad T470p 的 M.2 托盘使用 SATA Express 接口",
+  "date": "2019-01-14T18:51:41+08:00",
+  "lastmod": "2019-01-14T18:52:20+08:00",
+  "url": "/post/无法通过-thinkpad-t470p-的-m-2-托盘使用-sata-express-接口/",
+  "draft": false,
+  "description": "记录将 T470p M.2 托盘用于台式机 SATA Express 接口的失败尝试，分析可选 PCI-E 时钟触点与 SRIS 支持之间的差异。",
+  "categories": [
+    "硬件与数码"
+  ],
+  "tags": [
+    "硬件",
+    "存储",
+    "故障排查"
+  ],
+  "giscusDiscussion": 12,
+  "seoTitle": "无法通过 Thinkpad T470p 的 M.2 托盘使用 SATA Express 接口 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-360",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/无法通过-thinkpad-t470p-的-m-2-托盘使用-sata-express-接口/"
+}
+
+
+<p>之前购买的 MSI C236M 主板有一个 SATA Express 接口，但是没有 M.2 接口。SATA Express 作为一个著名的坑爹接口，推出后基本没有制造商制造了使用这个接口的 SSD，短短的一段时间后也再也没有主板厂商支持这个接口了。</p>
+<p>因为希望安装一个 NVMe SSD，偶然看到了 Thinkpad T470p 的 M.2 托盘（FRU 01HY319）。这个托盘在 T470p 上可以将一个 SATA Express 接口转换为 M.2 接口，虽然带宽会降低为 PCI-E x2。当时以为终于找到了救星，说不定可以挽救我可怜的 SATA Express 主板。</p>
+<p>在咸鱼上购买了一个，当到手的时候发现它的 SATA Express 接口上有可选的 PCI-E 时钟触点，感觉心中一凉。接上 SSD 尝试了一下，果然是不可以使用的。</p>
+<p>背景知识是这样的：SATA Express 设计的时候，由于怕 PCI-E 时钟信号在传输的时候出现不稳定的情况，所以去掉了时钟信号，而推动 PCI-E 联盟增加了 SRIS（带独立展频时钟的分立式基准时脉）特性来在无时钟信号时维持正常运行。华硕曾经提供过将无时钟支持 SRIS 的 PCI-E 信号重新加回时钟信号的转换板，但是现在市场上无法找到了。联想的这个托盘没有使用这个时钟信号恢复的方法，而是使用了 SATA Express 可选的时钟信号触点（<a href="http://pinoutguide.com/HD/SATA_Express_pinout.shtml" rel="noopener noreferrer" target="_blank">可以参考本网页中的 E7、E8 触点的定义</a>），直接使用了主板上的 PCI-E 时钟信号。而从台式机主板上引出的 SATA Express 当然没有这些触点，当然也就不可以使用了。</p>
+<p>所以如果有同学手上有一块有 SATA Express 的主板，我希望能在这里提醒大家一句，不用尝试了，看来是此路不通了……（手动苦笑）</p>

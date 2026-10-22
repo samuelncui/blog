@@ -1,0 +1,32 @@
+{
+  "title": "Making Goagent Start Minimized and Run at Startup",
+  "date": "2013-11-09T19:29:28+08:00",
+  "lastmod": "2013-11-09T19:29:46+08:00",
+  "url": "/en/post/how-goagent-automatic-minimize/",
+  "draft": false,
+  "description": "Configuration notes for making Goagent start minimized and launch with Windows, including the administrator privileges needed for its initial SSL certificate installation.",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "Windows",
+    "网络",
+    "自动化"
+  ],
+  "seoTitle": "Making Goagent Start Minimized and Run at Startup - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-81",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/how-goagent-automatic-minimize/"
+}
+
+<p>Minimizing Goagent requires clicking its system-tray icon, which is rather inconvenient.<br/>
+Here's a way to make it minimize automatically when it opens.<br/>
+Open proxy.ini and change:<br/>
+<code>visible = 1</code><br/>
+to:<br/>
+<code>visible = 0</code><br/>
+Restart it and you'll see the result!</p>
+<p>To run it at startup, put a shortcut in the Start menu's Startup folder.<br/>
+Administrator privileges are needed only the first time, to install the SSL certificate. After that, it works without them.</p>

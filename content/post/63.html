@@ -1,0 +1,35 @@
+{
+  "title": "如何解决rc.local中任务在开机一段时间后停止的问题",
+  "date": "2013-08-31T21:23:10+08:00",
+  "lastmod": "2013-08-31T21:23:10+08:00",
+  "url": "/post/如何解决rc-local中任务在开机一段时间后停止的问题/",
+  "draft": false,
+  "description": "以 DNSPod DDNS 脚本为例，排查 rc.local 任务运行一段时间后退出的问题，并记录与 shell 的 -e 选项有关的处理办法。",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "系统运维",
+    "自动化",
+    "Linux",
+    "网络"
+  ],
+  "seoTitle": "如何解决rc.local中任务在开机一段时间后停止的问题 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-63",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/如何解决rc-local中任务在开机一段时间后停止的问题/"
+}
+
+
+<p>我的服务器用的是DNSPod，再加上IP是动态的所以必须要用DDNS。<br/>
+我用的是一个基于shell脚本的DDNS程序，这个程序通过DNSPod的标准API来实现DDNS功能。我忘记程序<br/>
+之前我一直通过corn来实现每2分钟重复运行一次。<br/>
+之后通过sleep来实现每两分钟运行一次。<br/>
+但是后来发现每天重启后几个小时后，进程就不见了……<br/>
+经过若干过程，解决了这一问题。<br/>
+问题就在于rc.local的第一行：</p>
+<p>    #!/bin/sh -e</p>
+<p>“-e”参数是“错误停止”的意思，So，只要Ping稍高一点，有了错误，就停止了。<br/>
+解决办法就是把“-e”去掉就可以了。</p>

@@ -1,0 +1,27 @@
+{
+  "title": "zfs zed 升级后 CPU 占用率长时间 100% 问题排查",
+  "date": "2018-03-14T15:21:36+08:00",
+  "lastmod": "2018-03-14T15:21:36+08:00",
+  "url": "/post/zfs-zed-cpu-keep-full/",
+  "draft": false,
+  "description": "排查内核升级后 zed 持续满载的问题，最终发现 ZFS 用户态工具与内核模块版本不一致，通过重新编译模块解决。",
+  "categories": [
+    "NAS 与存储"
+  ],
+  "tags": [
+    "ZFS",
+    "Linux",
+    "故障排查"
+  ],
+  "seoTitle": "zfs zed 升级后 CPU 占用率长时间 100% 问题排查 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-352",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/zfs-zed-cpu-keep-full/"
+}
+
+
+<p>之前为了使用 BBR，将 NAS 的 kernel 从 4.4 升级到了 4.13，因为 Ubuntu 16.04 LTS 的 zfs 版本是 0.6.5，不支持 4.13 kernel，所以用一个 ppa 源将 zfs 升级到了 0.7.6。但是重启之后，发现 zed 这个 Daemon CPU 占用率长期保持 100%，尝试 <code>zpool upgrade -a</code> 来启用新特性，也报了错误。</p>
+<p>网上对这个现象的描述有很多。似乎 N 久之前有个版本 bug，会造成类似的情况。尝试更新 zfs，仍然没有恢复正常。</p>
+<p>后来看到一篇文章说，如果 <code>zfsutils-linux</code> 的版本和 Kernel Module 的版本不一致，可能会造成此类问题。<code>modinfo zfs</code>，发现版本还是 0.6.5。于是按照 github 上 zfsonlinux 项目的 wiki，<a href="https://github.com/zfsonlinux/zfs/wiki/Custom-Packages" rel="noopener noreferrer">Custom Packages</a> 这块讲了如何编译安装。通过这个，将 Kernel Module 更新到了 0.7.6，重启后问题消失。</p>

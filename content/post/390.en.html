@@ -1,0 +1,27 @@
+{
+  "title": "Improving Read Performance with ZFS on Linux",
+  "date": "2022-09-13T14:14:08+08:00",
+  "lastmod": "2022-09-13T14:14:08+08:00",
+  "url": "/en/post/zfs-on-linux-提升读取性能/",
+  "draft": false,
+  "description": "Examines unexpectedly low drive utilization during reads from an eight-disk RAIDZ2 pool and describes improving throughput by adjusting ZFS’s zfetch_max_distance prefetch parameter.",
+  "categories": [
+    "NAS 与存储"
+  ],
+  "tags": [
+    "ZFS",
+    "Linux",
+    "存储",
+    "性能优化"
+  ],
+  "seoTitle": "Improving Read Performance with ZFS on Linux - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-390",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/zfs-on-linux-提升读取性能/"
+}
+
+<p class="wp-block-paragraph">My ZFS system is a raidz2 array of 8 × 10 TB HDDs, and its read performance has consistently been around 190 MB/s. That is not terribly slow, but at that speed iostat shows disk utilization of only about 25%, while CPU usage is also low, leaving plenty of room for improvement.</p>
+<p class="wp-block-paragraph">After quite a bit of searching online, I found that the zfetch_max_distance parameter might affect read performance. It controls the maximum stream prefetch size, or, you could say, the size of the read buffer (<a href="https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Module%20Parameters.html#zfetch-max-distance" rel="noopener noreferrer">see this documentation</a>).</p>
+<p class="wp-block-paragraph">Using the command  <code>echo 67108864 &gt; /sys/module/zfs/parameters/zfetch_max_distance</code>  to set this parameter to 64 MB can significantly improve read speed.</p>

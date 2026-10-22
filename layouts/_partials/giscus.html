@@ -1,0 +1,26 @@
+{{ if and site.Params.giscus.enabled (ne .Params.comments false) }}
+  {{ $config := site.Params.giscus }}
+  {{ $english := eq site.Language.Name "en" }}
+  <section aria-labelledby="discussion-heading">
+    <h2 id="discussion-heading">{{ if $english }}Discussion{{ else }}讨论{{ end }}</h2>
+    {{ with .Params.giscusDiscussion }}<p>{{ if $english }}Historical comments were archived by the site owner. Each comment identifies its original author and publication time.{{ else }}历史评论由站长代为归档，原作者和发表时间标注在评论正文中。{{ end }}</p>{{ end }}
+    <div class="giscus"></div>
+    <script src="https://giscus.app/client.js"
+            data-repo="{{ $config.repo }}"
+            data-repo-id="{{ $config.repoId }}"
+            data-category="{{ $config.category }}"
+            data-category-id="{{ $config.categoryId }}"
+            data-mapping="{{ if .Params.giscusDiscussion }}number{{ else if .Params.giscusPath }}specific{{ else }}pathname{{ end }}"
+            {{ with .Params.giscusDiscussion }}data-term="{{ . }}"{{ else }}{{ with $.Params.giscusPath }}data-term="{{ . }}"{{ end }}{{ end }}
+            data-strict="1"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="preferred_color_scheme"
+            data-lang="{{ if $english }}en{{ else }}zh-CN{{ end }}"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async></script>
+    <p><a href="https://github.com/{{ $config.repo }}/discussions{{ with .Params.giscusDiscussion }}/{{ . }}{{ end }}" rel="noopener noreferrer">{{ if $english }}View discussion on GitHub{{ else }}在 GitHub 上查看讨论{{ end }}</a></p>
+  </section>
+{{ end }}

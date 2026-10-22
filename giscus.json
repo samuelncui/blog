@@ -1,0 +1,10 @@
+{
+  "origins": [
+    "https://samcui.com",
+    "https://www.samcui.com",
+    "http://127.0.0.1:8765",
+    "http://localhost:1313",
+    "https://samuelncui.github.io"
+  ],
+  "defaultCommentOrder": "oldest"
+}

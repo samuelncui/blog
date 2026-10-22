@@ -1,0 +1,27 @@
+[
+  {
+    "source": "/feed",
+    "destination": "/index.xml",
+    "status": 301
+  },
+  {
+    "source": "/feed/",
+    "destination": "/index.xml",
+    "status": 301
+  },
+  {
+    "source": "/wp-sitemap.xml",
+    "destination": "/sitemap_index.xml",
+    "status": 301
+  },
+  {
+    "source": "/post/category/uncategorized/",
+    "destination": "/post/",
+    "status": 301
+  },
+  {
+    "source": "/en/post/category/uncategorized/",
+    "destination": "/en/post/",
+    "status": 301
+  }
+]

@@ -1,0 +1,431 @@
+{
+  "reviewed": "2026-10-22",
+  "home": {
+    "url": "https://samcui.com/",
+    "title": "SamCui Computing - 崔竞宁的个人网站 | Samuel N Cui's Website",
+    "description": "崔竞宁的个人网站 | Samuel N Cui's Website"
+  },
+  "pages": [
+    {
+      "source": "content/post/9.html",
+      "url": "https://samcui.com/post/new-sever/",
+      "title": "新的服务器 - SamCui Computing",
+      "description": "我原来的服务器是SF.net的免费空间,被取缔了,数据也没拿回来...先默哀一下... 现在没时间重新做,过一段时间再说吧.",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2012-12-18T01:40:18+08:00",
+      "modified": "2012-12-18T01:42:12+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/pages/31.html",
+      "url": "https://samcui.com/about-samcui/",
+      "title": "介绍小崔 - SamCui Computing",
+      "description": "小崔旧照(小学)",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-02-06T22:40:35+08:00",
+      "modified": "2018-07-11T15:17:47+08:00",
+      "images": [
+        "/wp-content/uploads/2013/02/0416-e1360237012777.jpg"
+      ],
+      "type": "page"
+    },
+    {
+      "source": "content/post/40.html",
+      "url": "https://samcui.com/post/happy-the-year-of-snake/",
+      "title": "蛇年快乐！——Happy the Year of Snake! - SamCui Computing",
+      "description": "Happy the Year of Snake! 感谢壬辰年给予我帮助的同学们，希望你们在癸巳年里可以过得开心，过得快乐。 废话不多说，蛇年快乐！ PS.如果你留个言之类的，我不会不高兴的。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-02-09T23:55:57+08:00",
+      "modified": "2013-02-10T00:16:08+08:00",
+      "images": [
+        "/wp-content/uploads/2013/02/2013.jpg"
+      ],
+      "type": "post"
+    },
+    {
+      "source": "content/post/50.html",
+      "url": "https://samcui.com/post/%e5%a6%82%e4%bd%95%e4%bd%bfz-push%e6%94%af%e6%8c%81%e4%b8%ad%e6%96%87vcarddir/",
+      "title": "如何使Z-push支持中文VCardDir - SamCui Computing",
+      "description": "Z-push是一个支持Exchange Active Sync协议的开源软件。可以将IMAP协议里的邮件或VCard之类的通过该协议发送至手机。 本人希望使用其中的VCardDir功能，可惜无论是Windows生成的VCard文件还是Android生成的VCard文件，都无法正确解读中文…都是乱码。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-07-22T02:39:00+08:00",
+      "modified": "2013-07-24T21:14:23+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/53.html",
+      "url": "https://samcui.com/post/ubuntu-postfix-let-cpu-high/",
+      "title": "Postfix使Linux服务器CPU占用率居高不下的原因及解决办法 - SamCui Computing",
+      "description": "最近上SSH的时候发现CPU load averages总是高于2，top一下发现都好几十了…… 大部分资源消耗大的进程都是用户postfix开的，很明显是它的问题。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-07-24T21:11:26+08:00",
+      "modified": "2013-07-24T21:14:46+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/62.html",
+      "url": "https://samcui.com/post/%e6%9c%ac%e4%ba%ba%e4%b8%ba%e5%88%98%e5%ae%8f%e4%bd%91%e5%90%8c%e5%bf%97%e5%ae%9a%e5%88%b6%e7%9a%84mv-%e8%80%81%e5%be%90%e5%90%8c%e5%bf%97/",
+      "title": "本人为刘宏佑同志定制的MV - 老徐同志 - SamCui Computing",
+      "description": "信息找时间再补…… 这个MV实在是太基情了…… 还有刘同学口型对的实在是不好…… http://v.youku.com/v_show/id_XNjAxNDc0NTE2.html",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-08-31T09:42:25+08:00",
+      "modified": "2013-11-02T08:48:19+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/63.html",
+      "url": "https://samcui.com/post/%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3rc-local%e4%b8%ad%e4%bb%bb%e5%8a%a1%e5%9c%a8%e5%bc%80%e6%9c%ba%e4%b8%80%e6%ae%b5%e6%97%b6%e9%97%b4%e5%90%8e%e5%81%9c%e6%ad%a2%e7%9a%84%e9%97%ae%e9%a2%98/",
+      "title": "如何解决rc.local中任务在开机一段时间后停止的问题 - SamCui Computing",
+      "description": "我的服务器用的是DNSPod，再加上IP是动态的所以必须要用DDNS。 我用的是一个基于shell脚本的DDNS程序，这个程序通过DNSPod的标准API来实现DDNS功能。我忘记程序 之前我一直通过corn来实现每2分钟重复运行一次。 之后通过sleep来实现每两分钟运行一次。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-08-31T21:23:10+08:00",
+      "modified": "2013-08-31T21:23:10+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/65.html",
+      "url": "https://samcui.com/post/%e5%a6%82%e4%bd%95%e5%8f%96%e6%b6%88%e6%9f%90%e4%b8%aa%e7%89%b9%e5%ae%9a%e7%9a%84%e8%bd%af%e4%bb%b6%e7%9a%84%e7%94%a8%e6%88%b7%e8%b4%a6%e6%88%b7%e6%8e%a7%e5%88%b6-%e8%bd%ac/",
+      "title": "如何取消某个特定的软件的用户账户控制? - 转 - SamCui Computing",
+      "description": "在网上看到了这篇教程,转到这里待用好了…… (Windows7可用) 手动修改注册表： 在 HKEY_CURRENT_USERSSoftwareMicrosoftWindows NTCurrentVersionAppCompatFlagsLayers。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-10-29T09:19:41+08:00",
+      "modified": "2013-10-29T09:19:41+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/68.html",
+      "url": "https://samcui.com/post/%e9%82%a3%e4%ba%9b%e5%b9%b4%e6%88%91%e4%bb%ac%e4%b8%8a%e8%bf%87%e7%9a%84%e8%87%aa%e4%b9%a0%e8%af%be/",
+      "title": "那些年我们上过的自习课 - SamCui Computing",
+      "description": "我以名誉发誓，剧本不是我写的…… http://v.youku.com/v_show/id_XNDA5MDY0ODE2.html",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2012-06-06T08:12:18+08:00",
+      "modified": "2013-11-02T08:48:29+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/73.html",
+      "url": "https://samcui.com/post/%e7%b4%a7%e6%80%a5%e6%97%b6%e5%88%bb%e5%87%91%e5%87%ba%e6%9d%a5%e7%9a%84-%e4%b8%9c%e5%8c%97%e6%9e%97%e4%b8%9a%e5%a4%a7%e5%ad%a6%e6%9c%ba%e6%a2%b0%e7%94%b5%e5%ad%90%e4%b8%93%e4%b8%9a2013%e7%ba%a7/",
+      "title": "紧急时刻凑出来的 - 东北林业大学机械电子专业2013级宣传片 - SamCui Computing",
+      "description": "院迎新晚会要求的，本人才不想加上最后那行字呢…… 时间仓促（4个小时必须完工），质量不大好，凑活看吧…… PS.音频效果烂透了……我要换录音笔…… http://v.youku.com/v_show/id_XNjI5MzQzNjg0.html",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-10-28T08:41:55+08:00",
+      "modified": "2013-11-02T08:48:54+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/81.html",
+      "url": "https://samcui.com/post/how-goagent-automatic-minimize/",
+      "title": "Goagent如何自动最小化、开机自启？ - SamCui Computing",
+      "description": "想让Goagent最小化，必须要点击系统托盘里的图标，颇为麻烦。 如果你想让它打开的时候就自动最小化，这里有一个办法。 请移步proxy.ini，修改代码： visible = 1 为： visible = 0 然后重新打开下就看到效果了！ 另外，如果想开机自启的话，可以将快捷方式放到开始菜单的“启动”文件夹里。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-11-09T19:29:28+08:00",
+      "modified": "2013-11-09T19:29:46+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/84.html",
+      "url": "https://samcui.com/post/arduino-tfs-m74a-lock/",
+      "title": "利用十指科技的TFS-M74A指纹模块制作Arduino指纹锁 - SamCui Computing",
+      "description": "这个指纹锁是运行在宿舍门上的，通过一个14g金属舵机控制门锁——没错，我们学校的门锁就这么烂…… 板子是Arduino Mega，接了一个舵机，一个4x4的键盘（键位在程序中可以看到），一块5110LCD，一个微动开关（触发指纹模块电源），以及我们的主角，TFS-M74A指纹模块。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-11-09T20:03:19+08:00",
+      "modified": "2013-11-10T00:31:08+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/91.html",
+      "url": "https://samcui.com/post/wordpress-code-highlight/",
+      "title": "不用插件实现WordPress代码高亮显示 - 转 - SamCui Computing",
+      "description": "在上一篇文章中，我贴了一段800+行短得不可思议的的C语言代码。 所以，现场找了一个不用插件实现WordPress代码高亮显示的办法。 现转载如下： 偶尔在日志中加入一些代码，感觉完全没必要安装代码高亮插件，万一某天不用插件了，页面可能会很乱。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2013-11-09T20:23:23+08:00",
+      "modified": "2014-09-03T23:52:21+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/107.html",
+      "url": "https://samcui.com/post/%e5%8c%97%e8%a1%8c%e6%b8%b8%e8%ae%b0/",
+      "title": "北行游记 - SamCui Computing",
+      "description": "我在哈尔滨度过了一个学期，回到长春已有半个多月了，总觉得该写点什么。 大学总归是那样的，问了高中同学，有人24小时供电，有人独立卫浴，有人二人寝，唯独我这八人10小时供电的筒子楼是什么也没沾上。 又觉得月考也并非全是坏处，起码比起某些同志，我也算一科没都挂的了。 哈尔滨比我想象中的要烂很多。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2014-01-20T00:02:53+08:00",
+      "modified": "2014-09-03T23:45:32+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/112.html",
+      "url": "https://samcui.com/post/from_guoke_about_long_distance_relationship/",
+      "title": "转自果壳：异地恋情侣更容易甜言蜜语 - SamCui Computing",
+      "description": "在果壳看到一篇文章，转来试试新主题怎么样……:) 7月，又是一年毕业季。异地恋，还是分手，是很多大学生此时面临的艰难抉择。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2014-02-08T11:03:29+08:00",
+      "modified": "2014-02-08T11:03:29+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/128.html",
+      "url": "https://samcui.com/post/boring-note-20140903/",
+      "title": "无聊的散记 - SamCui Computing",
+      "description": "好久好久好久都没有更新博客了……我真是懒得不可思议…… 今天甚为无聊，所以散记一下好了…… 这段时间金工实习，整天在校工厂，惊诧于1957年的车床竟然健在。沈阳第一车床厂的产品质量果然一流，现在还能够正常工作。 据说我们明天要去锻工车间，如果压到了手，又会是什么样子呢？ 因为实习，我似乎不能够去迎接新生了。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2014-09-03T23:43:16+08:00",
+      "modified": "2015-07-02T15:35:43+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/166.html",
+      "url": "https://samcui.com/post/for-heroes/",
+      "title": "致英雄 - SamCui Computing",
+      "description": "致射手网，致人人影视，致英雄的离去，致曾经的辉煌。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2014-11-23T11:51:53+08:00",
+      "modified": "2014-11-23T11:51:53+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/176.html",
+      "url": "https://samcui.com/post/windows-nt-fonts-fallback-about-wtp-and-itunes/",
+      "title": "Windows NT 的字体回退问题解决方案 - SamCui Computing",
+      "description": "最近试图给母上的联想 F41A 装个 Windows 7，可惜它毕竟太老了些，遂改装 Windows Thin PC（教程在此，我爱死原作者了，在此表示感谢！）。 Windows Thin PC 是不附带中文的，需要自己安装。安装中文包之后，使用 iTunes 的时候，有一个问题——字体相当诡异。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2015-01-21T01:00:23+08:00",
+      "modified": "2015-01-21T01:05:54+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/196.html",
+      "url": "https://samcui.com/post/samdialsrun/",
+      "title": "深澜替代软件: samDialSrun - SamCui Computing",
+      "description": "换了新寝室，网络拨号软件变成深澜了，原来的mentohust也就没有办法用了。 官方客户端虽然不错，但是没有办法共享Wifi，也没有办法更改DNS什么的，于是就做了这个小软件。 是用Python写的，因为电脑上乱七八糟的环境太多了，也不知道到底用了哪些，所以就打包成exe了。 请在此处下载",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2015-09-06T14:31:43+08:00",
+      "modified": "2015-09-06T19:42:41+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/204.html",
+      "url": "https://samcui.com/post/about-stop-or-continue/",
+      "title": "续止论 - SamCui Computing",
+      "description": "余幼时卜居新宅，父置椅床柜等物焉。至市而览物西东，抚床且问价几何；世宗朝末时禄未起，新宅初购遂囊袋空。品美者皆以名贵拒人，价低物必有遗憾难买。父叹曰：吾喜者不能也，然吾能者实不喜。 今观之，凡易取似欲弃之，诸所欲视若虚妄。众或以可否求之而顺，或以所欲进焉而逆。或以所能思之然自娱，或以所欲量之遂自哀。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2015-12-05T18:55:12+08:00",
+      "modified": "2015-12-05T20:24:38+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/215.html",
+      "url": "https://samcui.com/post/%e5%a5%bd%e9%be%99%e8%ae%ba/",
+      "title": "好龙论 - SamCui Computing",
+      "description": "闻叶公子好龙，今人思之亦然。求而得之，既已而厌，遂以恶语相称，而条啸矣。崔生观之，何事无因而发耶？皆以未查称己，实则查而未见耳。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2016-03-16T22:39:56+08:00",
+      "modified": "2016-03-16T22:39:56+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/218.html",
+      "url": "https://samcui.com/post/kindle-models-report-before-oasis/",
+      "title": "Kindle 众版本体验记 - SamCui Computing",
+      "description": "今天 Kindle Oasis 发布了，之前还在想假如价格低于1k5或许可以搞一个，现在看来似乎把我卖了也买不起了。 这里写一个小文章，来为有购买 Kindle 意愿的人做一些参考。 我的第一个 Kindle 是 Paperwhite 2。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2016-04-13T22:56:22+08:00",
+      "modified": "2016-04-15T18:47:53+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/221.html",
+      "url": "https://samcui.com/post/%e6%99%9a%e5%86%ac%e6%97%a9%e6%98%a5%e8%ae%b0/",
+      "title": "晚冬早春记 - SamCui Computing",
+      "description": "哈尔滨的春天似乎要来了，却又退了回去。哈尔滨的云似乎要下雨，但又无法决定。风称不上和煦，也称不上凛冽。去年冬天的落叶，没有确定要不要化成春泥来护花。 总是挣扎求生，却不知道为了什么。似乎只是没有求生意愿的造物已经死去了吧，只留下被编程了的我们。于是我们便被驱使着去寻找陪伴，带来的只有痛苦。 但孤独也是一种美好啊。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2016-04-15T19:02:23+08:00",
+      "modified": "2016-04-15T19:03:19+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/292.html",
+      "url": "https://samcui.com/post/about-over-correct/",
+      "title": "矫枉论 - SamCui Computing",
+      "description": "唐末藩镇既起，将压君势，军阀逐鹿，涂炭中原。乃至宋起，太祖匡胤虑之，故释兵权，以文制武，聚诸权焉。将权轻而法密，兵员冗而乏习，遂亡于金元矣。 董子曰：矫者不过其正，弗能直。然今既矫枉，过中乃害也。前人辄以散相劫，终散矣。向时愚惑，既见劫而思之必散，遂决以速散也。而今思之，蚁穴于堤，既未溃也，除之乃可。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2016-08-09T19:35:07+08:00",
+      "modified": "2016-08-09T19:35:07+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/316.html",
+      "url": "https://samcui.com/post/ss-%e5%bc%95%e5%af%bc%e5%bc%8f%e8%87%aa%e5%8a%a8%e5%ae%89%e8%a3%85%e8%84%9a%e6%9c%ac/",
+      "title": "SS 引导式自动安装脚本 - SamCui Computing",
+      "description": "之前网上的脚本大概都只有 Shadowsocks 本身的安装，如果买了一个新服务器，还要做很多其他的工作。 昨天被宽带通的各种屏蔽搞的受不了了，想在阿里云国内的服务器上架个 SS 服务器，即使有各类脚本，最后还是要手动做各种调整。 所以写了这个脚本，可以用在一般的 Ubuntu Server VPS 上。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2017-02-01T23:02:36+08:00",
+      "modified": "2019-03-01T15:45:40+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/340.html",
+      "url": "https://samcui.com/post/nginx-port_in_redirect-%e9%80%89%e9%a1%b9%e7%9a%84%e7%94%a8%e5%a4%84/",
+      "title": "nginx port_in_redirect 选项的用处 - SamCui Computing",
+      "description": "二层代理时，自动添加斜杠带端口，只需要把 port_in_redirect 设置成 off 就可以解决了~~",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2017-11-30T11:55:59+08:00",
+      "modified": "2017-11-30T11:55:59+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/346.html",
+      "url": "https://samcui.com/post/fix-overheating-of-sst-ds380b/",
+      "title": "银欣 SST-DS380B 机箱散热优化 - SamCui Computing",
+      "description": "17 年中的时候，准备搭建一个 NAS，来存放乱七八糟的文件。因为希望使用 raid 6 以上系统，至少要有 6 个硬盘。又因为想加一个万兆网卡与台式机通讯，最后决定使用有 12 个 SATA 接口的永擎的 C2550D4I。了解到软 Raid 十分不靠谱，最后使用的是 ZFS（似乎更不靠谱了……）。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2018-03-14T14:56:50+08:00",
+      "modified": "2019-03-14T14:42:53+08:00",
+      "images": [
+        "/wp-content/uploads/2018/03/ds380-inside.jpg",
+        "/wp-content/uploads/2018/03/Image_22S.jpg",
+        "/wp-content/uploads/2018/03/351521009727_.pic_.jpg",
+        "/wp-content/uploads/2018/03/未命名表单.png"
+      ],
+      "type": "post"
+    },
+    {
+      "source": "content/post/352.html",
+      "url": "https://samcui.com/post/zfs-zed-cpu-keep-full/",
+      "title": "zfs zed 升级后 CPU 占用率长时间 100% 问题排查 - SamCui Computing",
+      "description": "之前为了使用 BBR，将 NAS 的 kernel 从 4.4 升级到了 4.13，因为 Ubuntu 16.04 LTS 的 zfs 版本是 0.6.5，不支持 4.13 kernel，所以用一个 ppa 源将 zfs 升级到了 0.7.6。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2018-03-14T15:21:36+08:00",
+      "modified": "2018-03-14T15:21:36+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/360.html",
+      "url": "https://samcui.com/post/%e6%97%a0%e6%b3%95%e9%80%9a%e8%bf%87-thinkpad-t470p-%e7%9a%84-m-2-%e6%89%98%e7%9b%98%e4%bd%bf%e7%94%a8-sata-express-%e6%8e%a5%e5%8f%a3/",
+      "title": "无法通过 Thinkpad T470p 的 M.2 托盘使用 SATA Express 接口 - SamCui Computing",
+      "description": "之前购买的 MSI C236M 主板有一个 SATA Express 接口，但是没有 M.2 接口。SATA Express 作为一个著名的坑爹接口，推出后基本没有制造商制造了使用这个接口的 SSD，短短的一段时间后也再也没有主板厂商支持这个接口了。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2019-01-14T18:51:41+08:00",
+      "modified": "2019-01-14T18:52:20+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/379.html",
+      "url": "https://samcui.com/post/tl-sh5210pb-%e7%9a%84%e4%b8%80%e4%ba%9b%e9%9a%90%e8%97%8f%e5%8f%82%e6%95%b0/",
+      "title": "TL-SH5210PB 的一些隐藏参数 - SamCui Computing",
+      "description": "TP-Link 的交换机，官网上都没有背板带宽等等参数。刚刚询问了下在线客服 TL-SH5210PB 这个交换机的参数，记录在这里，方便其他大佬取用。 包转发率是42Mpps 背板带宽是80Gbps",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2021-09-03T19:23:30+08:00",
+      "modified": "2021-09-03T19:24:00+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/381.html",
+      "url": "https://samcui.com/post/ip-rule-fwmark-not-working/",
+      "title": "ip rule 使用 fwmark 规则无效的解决办法 - SamCui Computing",
+      "description": "前端时间，尝试在软路由上，通过 iptables 的 mark 功能，配合 ip rule，来实现访问特定 ip set 的请求走特定的路由表。配置后，最初配置完 iptables 和 ip rule 后，一直都没有生效，其间试了不知道多少方法，有段时间直接创建了个几万条的路由表来实现这个功能。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2022-05-30T14:48:22+08:00",
+      "modified": "2022-05-30T14:53:55+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/390.html",
+      "url": "https://samcui.com/post/zfs-on-linux-%e6%8f%90%e5%8d%87%e8%af%bb%e5%8f%96%e6%80%a7%e8%83%bd/",
+      "title": "ZFS on Linux 提升读取性能 - SamCui Computing",
+      "description": "我的 ZFS 系统是由 8 x 10T HDD 组成的 raidz2，读取性能一直在 190MB/s 左右。这个速度不算太慢，但是到达这个速度时，从 iostat 的情况看，磁盘使用率只有 25% 左右，cpu 占用率也不高，还有很大的提升空间。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2022-09-13T14:14:08+08:00",
+      "modified": "2022-09-13T14:14:08+08:00",
+      "images": [],
+      "type": "post"
+    },
+    {
+      "source": "content/post/400.html",
+      "url": "https://samcui.com/post/set-4k-10bit-120hz-via-hdmi-with-ryzen-5700g-a520/",
+      "title": "Set 4k 10bit 120hz via HDMI with Ryzen 5700G & A520 - SamCui Computing",
+      "description": "(Try to write some blogs in English to improve my writing technic.) I bought a Ryzen 5700G CPU with ASRock A520M-ITX/ac as my living room HTPC. With Sony。",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2023-04-03T18:21:13+08:00",
+      "modified": "2023-04-03T20:21:47+08:00",
+      "images": [
+        "/wp-content/uploads/2023/04/IMG_4406.jpg"
+      ],
+      "type": "post"
+    },
+    {
+      "source": "content/post/422.html",
+      "url": "https://samcui.com/post/acp2larkbot-bridging-lark-to-ai-agents-over-acp/",
+      "title": "acp2larkbot: Bridging Lark to AI Agents over ACP - SamCui Computing",
+      "description": "acp2larkbot bridges any ACP-compatible AI agent into a fully-featured Lark bot with streaming cards, tool call panels, and proper error display.",
+      "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+      "published": "2026-06-01T19:03:52+08:00",
+      "modified": "2026-06-01T19:11:59+08:00",
+      "images": [],
+      "type": "post"
+    }
+  ],
+  "terms": [
+    {
+      "taxonomy": "categories",
+      "name": "公共",
+      "path": "/post/category/public/",
+      "noindex": false
+    },
+    {
+      "taxonomy": "tags",
+      "name": "公告",
+      "path": "/post/tag/公告/",
+      "noindex": true
+    },
+    {
+      "taxonomy": "categories",
+      "name": "未分类",
+      "path": "/post/category/uncategorized/",
+      "noindex": false
+    },
+    {
+      "taxonomy": "tags",
+      "name": "视频",
+      "path": "/post/tag/视频/",
+      "noindex": true
+    }
+  ],
+  "verificationFiles": [
+    {
+      "path": "/baidu_verify_9NJwD4K5q5.html",
+      "sha256": "64770328ec00fafff65d44250abdf764793e6c55ee2e4040471c89ee260fd87e"
+    },
+    {
+      "path": "/favicon.png",
+      "sha256": "7941ca5ca6d0c426483f5394e1a5d48c9d9ac5aec1e45189bdeaa1276d333a01"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+name: Build Hugo
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish to Pages after public-release approval and Pages setup'
+        type: boolean
+        default: false
+      preview:
+        description: 'Use the default /blog/ Pages URL with noindex; disable after custom-domain setup'
+        type: boolean
+        default: true
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Install Hugo 0.168.0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download v0.168.0 --repo gohugoio/hugo --pattern hugo_0.168.0_linux-amd64.tar.gz --pattern hugo_0.168.0_checksums.txt
+          grep ' hugo_0.168.0_linux-amd64.tar.gz$' hugo_0.168.0_checksums.txt | sha256sum --check
+          tar -xzf hugo_0.168.0_linux-amd64.tar.gz hugo
+          mkdir -p "$RUNNER_TEMP/hugo-bin"
+          mv hugo "$RUNNER_TEMP/hugo-bin/"
+          echo "$RUNNER_TEMP/hugo-bin" >> "$GITHUB_PATH"
+      - name: Install Dart Sass 1.106.1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download 1.106.1 --repo sass/dart-sass --pattern dart-sass-1.106.1-linux-x64.tar.gz
+          echo 'ad99cccb90de4ad2926e03e32d819c83baf32c3dbff56da92df0eed10e604d60  dart-sass-1.106.1-linux-x64.tar.gz' | sha256sum --check
+          tar -xzf dart-sass-1.106.1-linux-x64.tar.gz -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/dart-sass" >> "$GITHUB_PATH"
+      - run: hugo --panicOnWarning
+      - run: python3 scripts/check_site.py public
+      - run: python3 scripts/check_seo.py public
+      - run: python3 scripts/check_languages.py public
+      - name: Prepare default-domain preview
+        if: github.event_name == 'workflow_dispatch' && inputs.publish && inputs.preview
+        run: python3 scripts/prepare_pages_preview.py public /blog/
+      - name: Upload Pages site
+        if: github.event_name == 'workflow_dispatch' && inputs.publish
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
+        with:
+          path: public
+  deploy:
+    if: github.event_name == 'workflow_dispatch' && inputs.publish
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy Pages site
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e

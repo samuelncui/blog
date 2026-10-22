@@ -1,0 +1,10 @@
+{{- $id := .Page.Params.youku -}}
+{{- if not (findRE `^[A-Za-z0-9=]+$` $id) -}}{{ errorf "Invalid Youku ID on %s" .Page.RelPermalink }}{{- end -}}
+<div class="video-wrapper">
+  <iframe src="https://player.youku.com/embed/{{ $id }}"
+          title="{{ .Page.Title }}"
+          allow="fullscreen; encrypted-media; picture-in-picture"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
+<p><a href="https://v.youku.com/v_show/id_{{ $id }}.html" target="_blank" rel="noopener noreferrer">{{ if eq .Page.Language.Name "en" }}Watch on Youku{{ else }}在优酷观看{{ end }}</a></p>

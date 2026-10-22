@@ -1,0 +1,8 @@
+.article-content .dp-highlighter { max-width: 100%; overflow-x: auto; padding-block: 16px; border-radius: 6px; background: var(--pre-background-color); font: .87em/1.65 var(--code-font-family); }
+.article-content .dp-highlighter ol { width: max-content; min-width: 100%; margin: 0; padding: 0 24px 0 4.5em; }
+.article-content .dp-highlighter li { padding-inline: 8px; white-space: pre; overflow-wrap: normal; word-break: normal; }
+.article-content .dp-highlighter .comment { color: var(--card-text-color-secondary); }
+.article-content .dp-highlighter .keyword, .article-content .dp-highlighter .preprocessor { color: var(--accent-color); font-weight: 600; }
+.article-content img { max-width: 100%; height: auto; }
+.article-content .wp-caption { max-width: 100%; }
+.article-content .wp-caption-text { color: var(--card-text-color-secondary); font-size: 1.4rem; }

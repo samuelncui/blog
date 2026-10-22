@@ -1,0 +1,26 @@
+{
+  "title": "Troubleshooting Sustained 100% CPU Usage by zfs zed After an Upgrade",
+  "date": "2018-03-14T15:21:36+08:00",
+  "lastmod": "2018-03-14T15:21:36+08:00",
+  "url": "/en/post/zfs-zed-cpu-keep-full/",
+  "draft": false,
+  "description": "Investigates sustained 100% CPU usage by zed after a kernel and ZFS upgrade, tracing the problem to mismatched userspace and kernel-module versions and resolving it by rebuilding the module.",
+  "categories": [
+    "NAS 与存储"
+  ],
+  "tags": [
+    "ZFS",
+    "Linux",
+    "故障排查"
+  ],
+  "seoTitle": "Troubleshooting Sustained 100% CPU Usage by zfs zed After an Upgrade - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-352",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/zfs-zed-cpu-keep-full/"
+}
+
+<p>To use BBR, I upgraded my NAS kernel from 4.4 to 4.13. Ubuntu 16.04 LTS shipped with zfs 0.6.5, which did not support kernel 4.13, so I upgraded zfs to 0.7.6 using a PPA. After rebooting, however, I found that the zed daemon stayed at 100% CPU usage for long periods. Trying  <code>zpool upgrade -a</code>  to enable the new features also produced an error.</p>
+<p>There are many accounts of this behavior online. Apparently, a bug in some version long ago caused similar symptoms. I tried updating zfs, but things still did not return to normal.</p>
+<p>Later, I read an article saying that a version mismatch between  <code>zfsutils-linux</code>  and the kernel module could cause this problem. I ran <code>modinfo zfs</code> and found that the version was still 0.6.5. I then followed the zfsonlinux project's GitHub wiki, whose <a href="https://github.com/zfsonlinux/zfs/wiki/Custom-Packages" rel="noopener noreferrer">Custom Packages</a>  section explains how to compile and install it. This let me update the kernel module to 0.7.6, and after a reboot the problem disappeared.</p>

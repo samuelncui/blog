@@ -1,0 +1,41 @@
+{
+  "title": "Windows NT 的字体回退问题解决方案",
+  "date": "2015-01-21T01:00:23+08:00",
+  "lastmod": "2015-01-21T01:05:54+08:00",
+  "url": "/post/windows-nt-fonts-fallback-about-wtp-and-itunes/",
+  "draft": false,
+  "description": "排查 Windows Thin PC 中 iTunes 的中文字体异常，通过对照正常 Windows 7 电脑的字体回退注册表设置，修复界面与列表的显示问题。",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "Windows",
+    "故障排查"
+  ],
+  "giscusDiscussion": 8,
+  "seoTitle": "Windows NT 的字体回退问题解决方案 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-176",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/windows-nt-fonts-fallback-about-wtp-and-itunes/"
+}
+
+
+<p>最近试图给母上的联想 F41A 装个 Windows 7，可惜它毕竟太老了些，遂改装 Windows Thin PC（<a href="http://ichemistry.blog.163.com/blog/static/171997127201293115654522/" rel="noopener noreferrer" target="_blank" title="Windows Thin PC下载、安装、汉化及激活教程 - 清泉石上流的日志 - 网易博客">教程在此</a>，我爱死原作者了，在此表示感谢！）。</p>
+<p>Windows Thin PC 是不附带中文的，需要自己安装。安装中文包之后，使用 iTunes 的时候，有一个问题——字体相当诡异。</p>
+<p>这个问题是由 Windows 字体回退造成的。Windows Thin PC的字体并不完整，初始状态下不包含微软雅黑等字体，也不包含与此相关的字体回退。只有一个用于 Unicode 的似乎是 No tofu 的字体。可惜此字体能做的也就只是没有乱码罢了。 iTunes 调用的字体没有包含中文，在进行回退的过程中，会回退到原来的字体上去。造成的后果就是歪歪扭扭，根本不忍直视。<br/>
+<br/>
+经过 Google 配合本人以10分通过过4级的高（hè）超（hè）英语水平，按照 Microsoft <a href="http://msdn.microsoft.com/en-us/goglobal/bb688134.aspx" rel="noopener noreferrer" target="_blank" title="Globalization Step-by-Step: Fonts">此文</a>中的指示，找到了注册表中关于回滚的那部分：</p>
+<ul>
+<li><strong>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontLink\SystemLink</strong></li>
+</ul>
+<p>此处有注册表项若干，每个字体一个。</p>
+<p>按 Apple <a href="http://support.apple.com/zh-cn/ts4338" rel="noopener noreferrer" target="_blank" title="iTunes（Windows 版）：故障诊断 iTunes 中丢失的菜单和文本">此文</a>所述，iTunes 所用字体应为 <em>“Segoe UI 粗体”和“Segoe UI 常规”</em> ，于是把这两项的回退中按照我手中正常的 Windows 7 电脑更改了。</p>
+<p>此操作解决了 UI 中的一部分字体扭曲问题，然而列表等处的问题仍然存在。在半个小时的搜索过后，并没有找到 iTunes 所使用的另外一种字体的具体名称。</p>
+<p>所以就把正常电脑中的回滚设置整体导出，导入到目标电脑中，问题解决。</p>
+<p>So，为了读者（虽然怀疑是否有人会看这篇文字……）操作方便，总结方法如下：</p>
+<ul>
+<li>从正常电脑中整体导出 <strong>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontLink\SystemLink</strong></li>
+<li>至字体回退有问题的电脑导入</li>
+</ul>

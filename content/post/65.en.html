@@ -1,0 +1,29 @@
+{
+  "title": "Disabling User Account Control for a Specific Program — Repost",
+  "date": "2013-10-29T09:19:41+08:00",
+  "lastmod": "2013-10-29T09:19:41+08:00",
+  "url": "/en/post/如何取消某个特定的软件的用户账户控制-转/",
+  "draft": false,
+  "description": "A reposted Windows 7 registry tip using RunAsInvoker for programs that do not modify system files or settings, while leaving system-wide User Account Control enabled.",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "Windows",
+    "故障排查",
+    "转载"
+  ],
+  "seoTitle": "Disabling User Account Control for a Specific Program — Repost - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-65",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/如何取消某个特定的软件的用户账户控制-转/"
+}
+
+<p>I found this tutorial online and am reposting it here for future use…<br/>
+(Works on Windows 7.)</p>
+<p>Edit the registry manually:<br/>
+Create a value under the HKEY_CURRENT_USERS\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers key. Use the program's full path as the value name, and “RunAsInvoker” as the value data.<br/>
+The program will not trigger a User Account Control prompt as long as it doesn't modify system files or settings! (And you won't have to reduce system security by turning UAC off.)</p>
+<p>Source:<a href="http://zhidao.baidu.com/link?url=p870H7VYgNhXsOGyBhSi06oYdtgz8ljEJTKQ-oZOw9V3Dc_0OtVxwngAljqAE9PoJEHYt8kkjscKW8oISngMPa" rel="noopener noreferrer">http://zhidao.baidu.com/link?url=p870H7VYgNhXsOGyBhSi06oYdtgz8ljEJTKQ-oZOw9V3Dc_0OtVxwngAljqAE9PoJEHYt8kkjscKW8oISngMPa</a></p>

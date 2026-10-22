@@ -1,0 +1,33 @@
+{
+  "title": "Goagent如何自动最小化、开机自启？",
+  "date": "2013-11-09T19:29:28+08:00",
+  "lastmod": "2013-11-09T19:29:46+08:00",
+  "url": "/post/how-goagent-automatic-minimize/",
+  "draft": false,
+  "description": "记录 Goagent 的窗口与启动项配置，减少手动最小化的操作，并说明首次安装 SSL 证书时的权限需求。",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "Windows",
+    "网络",
+    "自动化"
+  ],
+  "seoTitle": "Goagent如何自动最小化、开机自启？ - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-81",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/how-goagent-automatic-minimize/"
+}
+
+
+<p>想让Goagent最小化，必须要点击系统托盘里的图标，颇为麻烦。<br/>
+如果你想让它打开的时候就自动最小化，这里有一个办法。<br/>
+请移步proxy.ini，修改代码：<br/>
+<code>visible = 1</code><br/>
+为：<br/>
+<code>visible = 0</code><br/>
+然后重新打开下就看到效果了！</p>
+<p>另外，如果想开机自启的话，可以将快捷方式放到开始菜单的“启动”文件夹里。<br/>
+只有第一次要求管理员权限安装SSL证书，之后没管理员权限也可以用。</p>

@@ -1,0 +1,42 @@
+{
+  "title": "Improving Cooling in the SilverStone SST-DS380B Case",
+  "date": "2018-03-14T14:56:50+08:00",
+  "lastmod": "2019-03-14T14:42:53+08:00",
+  "url": "/en/post/fix-overheating-of-sst-ds380b/",
+  "draft": false,
+  "description": "Describes two ABS-sheet airflow modifications to a DS380B NAS case: first cooling the drive cage, then addressing a CPU airflow dead zone. The post records the layout changes and the resulting drive and CPU temperatures.",
+  "categories": [
+    "NAS 与存储"
+  ],
+  "tags": [
+    "NAS",
+    "硬件",
+    "性能优化"
+  ],
+  "giscusDiscussion": 11,
+  "seoTitle": "Improving Cooling in the SilverStone SST-DS380B Case - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "images": [
+    "/wp-content/uploads/2018/03/ds380-inside.jpg",
+    "/wp-content/uploads/2018/03/Image_22S.jpg",
+    "/wp-content/uploads/2018/03/351521009727_.pic_.jpg",
+    "/wp-content/uploads/2018/03/未命名表单.png"
+  ],
+  "author": "Samuel N Cui",
+  "translationKey": "post-346",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/fix-overheating-of-sst-ds380b/"
+}
+
+<p>In mid-2017, I planned to build a NAS for all my miscellaneous files. I wanted RAID 6 or better, so it needed at least six drives. I also wanted a 10-gigabit network card to connect to my desktop, and eventually chose the ASRock Rack C2550D4I with its 12 SATA ports. After learning that software RAID was very unreliable, I ended up using ZFS (which seems even less reliable...). Conveniently, the C2550D4I supports ECC memory, making it a good fit.</p>
+<p>After building the eight-drive NAS as planned, I found a serious problem: the drives stayed at 50–60°C all year round, which made me very worried about their lifespan. Then I came across this article online: <a href="https://blog.brianmoses.net/2017/04/creating-a-cooling-duct-for-the-silverstone-ds380.html" rel="noopener noreferrer" target="_blank">Creating a Cooling Duct for the SilverStone DS380B</a>.</p>
+<p>Before describing the method used in that article, let me first explain the DS380B's airflow layout.</p>
+<figure id="attachment_347"><a href="/wp-content/uploads/2018/03/ds380-inside.jpg"><img alt="" aria-describedby="caption-attachment-347" class="wp-image-347 size-full" decoding="async" height="560" loading="lazy" src="/wp-content/uploads/2018/03/ds380-inside.jpg" width="560"/></a><figcaption id="caption-attachment-347">With the drive cage installed (image from the official website)</figcaption></figure>
+<figure id="attachment_348"><a href="/wp-content/uploads/2018/03/Image_22S.jpg"><img alt="" aria-describedby="caption-attachment-348" class="size-full wp-image-348" decoding="async" height="1260" loading="lazy" src="/wp-content/uploads/2018/03/Image_22S.jpg" width="1524"/></a><figcaption id="caption-attachment-348">With the drive cage removed (image found online; will remove if it infringes copyright)</figcaption></figure>
+<p>As you can see, two intake fans cool the drive cage, and there is another exhaust fan at the back of the case. The article above uses a 3D-printed air duct to channel air from the intake fans into the drive cage.</p>
+<p>At first I also wanted to get one 3D-printed through Taobao, but then I thought: it is just a piece of plastic—buying a sheet, cutting it and sticking it in place should work just as well. So I bought two ABS plastic sheets online, cut them to size and attached them with double-sided tape. Note that you need to cut a few notches to leave room for the various cables in this area.</p>
+<p>After these changes, the drive temperatures dropped to 20–40°C, depending on load, season and so on.</p>
+<figure id="attachment_349"><a href="/wp-content/uploads/2018/03/351521009727_.pic_.jpg"><img alt="" aria-describedby="caption-attachment-349" class="wp-image-349 size-full" decoding="async" height="340" loading="lazy" src="/wp-content/uploads/2018/03/351521009727_.pic_.jpg" width="820"/></a><figcaption id="caption-attachment-349">Drive temperature monitoring after the initial modification</figcaption></figure>
+<p>Everything was fine for a long time after that. Recently, however, I upgraded the kernel and zfs to use BBR, which caused some problems (more on that in the next post). The CPU stayed under full load for long periods, holding its temperature at 98°C and causing shutdowns and similar issues. At first I thought the case had accumulated too much dust, but after opening it I found that SilverStone's dust filters worked very well: there was not much dust inside. After some analysis, I concluded that the earlier air guide had sent all the airflow through the drive cage, leaving the C2550D4I's fanless CPU heatsink in a dead zone.</p>
+<p>So I decided to use the same trick again. With the leftover ABS sheet, I made an L-shaped air duct to route as much air as possible past the CPU and memory before it left through the exhaust fan. After the modification, the CPU's full-load temperature fell from 98°C to around 70°C. That is still fairly high, but it no longer affects stability.</p>
+<figure id="attachment_350"><a href="/wp-content/uploads/2018/03/%E6%9C%AA%E5%91%BD%E5%90%8D%E8%A1%A8%E5%8D%95.png"><img alt="" aria-describedby="caption-attachment-350" class="wp-image-350 size-full" decoding="async" height="1052" loading="lazy" src="/wp-content/uploads/2018/03/%E6%9C%AA%E5%91%BD%E5%90%8D%E8%A1%A8%E5%8D%95.png" width="902"/></a><figcaption id="caption-attachment-350">A very rough diagram of the completed modification, not to scale: top view above, side view below</figcaption></figure>

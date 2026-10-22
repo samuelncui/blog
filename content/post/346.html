@@ -1,0 +1,43 @@
+{
+  "title": "银欣 SST-DS380B 机箱散热优化",
+  "date": "2018-03-14T14:56:50+08:00",
+  "lastmod": "2019-03-14T14:42:53+08:00",
+  "url": "/post/fix-overheating-of-sst-ds380b/",
+  "draft": false,
+  "description": "用 ABS 塑料板改造 DS380B 风道，先改善硬盘笼散热，再给被忽略的 CPU 与内存导风，记录改造思路和前后温度变化。",
+  "categories": [
+    "NAS 与存储"
+  ],
+  "tags": [
+    "NAS",
+    "硬件",
+    "性能优化"
+  ],
+  "giscusDiscussion": 11,
+  "seoTitle": "银欣 SST-DS380B 机箱散热优化 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "images": [
+    "/wp-content/uploads/2018/03/ds380-inside.jpg",
+    "/wp-content/uploads/2018/03/Image_22S.jpg",
+    "/wp-content/uploads/2018/03/351521009727_.pic_.jpg",
+    "/wp-content/uploads/2018/03/未命名表单.png"
+  ],
+  "author": "崔 竞宁",
+  "translationKey": "post-346",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/fix-overheating-of-sst-ds380b/"
+}
+
+
+<p>17 年中的时候，准备搭建一个 NAS，来存放乱七八糟的文件。因为希望使用 raid 6 以上系统，至少要有 6 个硬盘。又因为想加一个万兆网卡与台式机通讯，最后决定使用有 12 个 SATA 接口的永擎的 C2550D4I。了解到软 Raid 十分不靠谱，最后使用的是 ZFS（似乎更不靠谱了……）。正好 C2550D4I 可以使用 ECC 内存，配合起来非常方便。</p>
+<p>按照计划组建了 8 个硬盘的 NAS 之后，发现的一个严重问题就是，磁盘温度常年保持在 50~60℃，让我对硬盘的寿命深深担忧。于是在网上看到了这个文章：<a href="https://blog.brianmoses.net/2017/04/creating-a-cooling-duct-for-the-silverstone-ds380.html" rel="noopener noreferrer" target="_blank">Creating a Cooling Duct for the SilverStone DS380B</a>。</p>
+<p>在开始详细描述这个文章使用的方法之前，请允许我先讲一下 DS380B 的风道结构。</p>
+<figure id="attachment_347"><a href="/wp-content/uploads/2018/03/ds380-inside.jpg"><img alt="" aria-describedby="caption-attachment-347" class="wp-image-347 size-full" decoding="async" height="560" loading="lazy" src="/wp-content/uploads/2018/03/ds380-inside.jpg" width="560"/></a><figcaption id="caption-attachment-347">硬盘笼未拆卸时（官网图）</figcaption></figure>
+<figure id="attachment_348"><a href="/wp-content/uploads/2018/03/Image_22S.jpg"><img alt="" aria-describedby="caption-attachment-348" class="size-full wp-image-348" decoding="async" height="1260" loading="lazy" src="/wp-content/uploads/2018/03/Image_22S.jpg" width="1524"/></a><figcaption id="caption-attachment-348">卸掉硬盘笼时（网图侵删）</figcaption></figure>
+<p>所以我们可以看到，负责硬盘笼散热的是两个进风风扇，机箱后面还有一个出风风扇。上述文章的手法，是 3D 打印了一个导风板，将进风风扇的空气导到硬盘笼去。</p>
+<p>最开始也想在马云爸爸那里 3D 打印一个的，但后来想，不就是个塑料板嘛，直接买一张，剪裁一下粘上去也是一样的。所以就在网上买了 2 张 ABS 塑料板，按照尺寸剪裁之后，用双面胶粘上去了。需要注意的是，为了给这块的各种线缆留出空间，还需要开几个豁口。</p>
+<p>在采用这些措施之后，硬盘温度降低到了 20~40 ℃（根据负载、季节不等）。</p>
+<figure id="attachment_349"><a href="/wp-content/uploads/2018/03/351521009727_.pic_.jpg"><img alt="" aria-describedby="caption-attachment-349" class="wp-image-349 size-full" decoding="async" height="340" loading="lazy" src="/wp-content/uploads/2018/03/351521009727_.pic_.jpg" width="820"/></a><figcaption id="caption-attachment-349">初步改造后的硬盘温度监控</figcaption></figure>
+<p>之后的很长时间平安无事。但是最近为了使用 BBR，升级了内核和 zfs，造成了一些问题（下一篇文章讲一下），CPU 长时间满载，导致 CPU 温度持续 98℃，出现了自动关机之类的情况。最开始以为是因为机箱积灰太多，拆开后发现，银欣的过滤网还是非常有效果的，机箱内灰尘不是很多。分析之后，认为是之前的导风片使空气都流经硬盘笼，而 C2550D4I 的无风扇 CPU 散热器就成了一个死角。</p>
+<p>所以决定故伎重演，用剩下来的 ABS 板做了一个 L 型的导风罩，使空气经排风扇流出时，尽量经过 CPU 和内存。经过改造之后，CPU 温度在满载时由 98℃ 降低到了 70℃ 左右，虽然还是比较高，但是已经不会影响稳定性了。</p>
+<figure id="attachment_350"><a href="/wp-content/uploads/2018/03/%E6%9C%AA%E5%91%BD%E5%90%8D%E8%A1%A8%E5%8D%95.png"><img alt="" aria-describedby="caption-attachment-350" class="wp-image-350 size-full" decoding="async" height="1052" loading="lazy" src="/wp-content/uploads/2018/03/%E6%9C%AA%E5%91%BD%E5%90%8D%E8%A1%A8%E5%8D%95.png" width="902"/></a><figcaption id="caption-attachment-350">改造完成之后的超简略无比例尺示意图，上-俯视图，下-侧视图</figcaption></figure>

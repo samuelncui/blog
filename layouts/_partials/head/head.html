@@ -1,0 +1,8 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{ if in (slice "home" "section" "taxonomy" "term") .Kind }}{{ $paginator := partial "helper/paginator.html" . }}{{ end }}
+{{ partial "seo.html" . }}
+<link rel="icon" type="image/png" href="{{ "favicon.png" | relURL }}?v={{ readFile "static/favicon.png" | sha256 | truncate 12 "" }}">
+{{ with .OutputFormats.Get "RSS" }}<link rel="alternate" type="application/rss+xml" title="{{ site.Title }}" href="{{ .Permalink }}">{{ end }}
+{{ partial "head/custom-font.html" . }}
+{{ partial "head/style.html" . }}

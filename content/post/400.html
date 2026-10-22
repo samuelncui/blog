@@ -1,0 +1,31 @@
+{
+  "title": "使用 Ryzen 5700G 和 A520，通过 HDMI 实现 4K、10bit、120Hz 输出",
+  "date": "2023-04-03T18:21:13+08:00",
+  "lastmod": "2023-04-03T20:21:47+08:00",
+  "url": "/post/set-4k-10bit-120hz-via-hdmi-with-ryzen-5700g-a520/",
+  "draft": false,
+  "description": "记录 5700G／A520 平台用主动式 DP 转 HDMI 2.1 转接器实现 4K、4:4:4、10bit、120Hz 输出的过程，并保留对带宽与 DSC 的疑问。",
+  "categories": [
+    "硬件与数码"
+  ],
+  "tags": [
+    "硬件",
+    "家庭影音",
+    "故障排查"
+  ],
+  "seoTitle": "使用 Ryzen 5700G 和 A520，通过 HDMI 实现 4K、10bit、120Hz 输出 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "images": [
+    "/wp-content/uploads/2023/04/IMG_4406.jpg"
+  ],
+  "author": "崔 竞宁",
+  "translationKey": "post-400",
+  "originalLanguage": "en",
+  "giscusPath": "/post/set-4k-10bit-120hz-via-hdmi-with-ryzen-5700g-a520/"
+}
+
+<p class="wp-block-paragraph">我买了一颗 Ryzen 5700G CPU，搭配华擎 A520M-ITX/ac 主板，作为客厅的 HTPC。连接索尼 77A80J 时，我甚至无法在 4K、60Hz、RBG 4:4:4 下把色深设为 10bit，更别说 4K、120Hz 了。华擎官网说 A520M-ITX/ac 支持 HDMI 2.1，但换了好几根线，问题仍然存在。我的判断是，这个 HDMI 接口的带宽很可能被限制在 HDMI 2.0b 的水平。受限于 14.4Gbit/s 的带宽，HDMI 2.0b 可以支持 4K、60Hz、4:4:4、8bit（12.54Gbit/s），或 4K、60Hz、4:2:2、10bit（10.45Gbit/s），但无法支持 4K、60Hz、4:4:4、10bit（15.68Gbit/s）。</p>
+<p class="wp-block-paragraph">Ryzen 5700G 的引脚提供了 DisplayPort 1.4，所以如果 HDMI 不行，也许 DisplayPort 能解决问题。于是我买了一个主动式 DisplayPort 1.4 转 HDMI 2.1 转接器（见下图）。注意，便宜的转接器可能不行，因为我们需要支持 HDMI 2.1 输出的转接器。根据我的经验，淘宝上的价格至少要 100 元人民币，在亚马逊上可能还要更贵。</p>
+<figure class="wp-block-image size-full is-resized"><a href="/wp-content/uploads/2023/04/IMG_4406.jpg"><img alt="" class="wp-image-401" decoding="async" height="342" loading="lazy" src="/wp-content/uploads/2023/04/IMG_4406.jpg" width="342"/></a></figure>
+<p class="wp-block-paragraph">用上这个转接器后，我可以在 Adrenalin 中把色深设为 10bit，再在 Windows 显示设置中把刷新率设为 120Hz，于是就实现了 4K、4:4:4、10bit、120Hz 输出！这实在很奇怪，因为这种输出需要 32.27Gbit/s 的带宽，而 DisplayPort 1.4 只有 25.92Gbit/s。在 AV 功放（AVR）上也能确认这一输出设置。难道接口自动启用了 DSC？我也不清楚。</p>
+<p class="wp-block-paragraph">不过，我总算实现了目标。如果你也想让 Ryzen 5xxxG 输出更高的色深或刷新率，不妨试试这个方法。</p>

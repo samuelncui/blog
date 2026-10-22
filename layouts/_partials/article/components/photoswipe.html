@@ -1,0 +1,9 @@
+{{- $opts := dict "minify" hugo.IsProduction "format" "esm" -}}
+{{- $galleryScript := resources.Get "ts/gallery.ts" | js.Build $opts -}}
+
+{{ $style := hugo.Data.external.PhotoSwipe.Style }}
+{{ $core := hugo.Data.external.PhotoSwipe.Core }}
+{{ $lightbox := hugo.Data.external.PhotoSwipe.Lightbox }}
+
+{{ $module := resources.Get "js/photoswipe.js" | resources.ExecuteAsTemplate "js/photoswipe.js" (dict "Gallery" $galleryScript.RelPermalink "Style" $style "Core" $core "Lightbox" $lightbox) | minify | fingerprint }}
+<script type="module" src="{{ $module.RelPermalink }}" integrity="{{ $module.Data.Integrity }}"></script>

@@ -1,0 +1,48 @@
+{
+  "title": "ip rule 使用 fwmark 规则无效的解决办法",
+  "date": "2022-05-30T14:48:22+08:00",
+  "lastmod": "2022-05-30T14:53:55+08:00",
+  "url": "/post/ip-rule-fwmark-not-working/",
+  "draft": false,
+  "description": "记录使用 iptables 标记与 ip rule 分流失败的排查，包含 fwmark_reflect、rp_filter 的调整及完整配置示例。",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "Linux",
+    "网络",
+    "故障排查"
+  ],
+  "seoTitle": "ip rule 使用 fwmark 规则无效的解决办法 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-381",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/ip-rule-fwmark-not-working/"
+}
+
+
+
+<p class="wp-block-paragraph">前端时间，尝试在软路由上，通过 iptables 的 mark 功能，配合 ip rule，来实现访问特定 ip set 的请求走特定的路由表。配置后，最初配置完 iptables 和 ip rule 后，一直都没有生效，其间试了不知道多少方法，有段时间直接创建了个几万条的路由表来实现这个功能。</p>
+<p class="wp-block-paragraph">最终发现是因为 fwmark_reflect 和 rp_filter 这两个设置的原因：</p>
+<ul class="wp-block-list"><li>fwmark_reflect 默认值为 0，应当配置为 1；</li><li>rp_filter 默认值为 0，应当配置为 2。</li></ul>
+<p class="wp-block-paragraph">对这两个进行配置后，这组配置就可以正常 Work 了。这几个配置的原理，由于时间关系，没有理解透彻。读者有兴趣的话，可以研究下。</p>
+<p class="wp-block-paragraph">配置和注释如下：</p>
+<pre class="wp-block-code"><code><meta charset="utf-8"/>iptables -t mangle -N YOUR_CHAIN_NAME
+# 来自指定 ip 的包不走这套规则，可以加你需要指定的其他 ip
+iptables -t mangle -A YOUR_CHAIN_NAME -s 192.168.1.1/32 -j RETURN<meta charset="utf-8"/>
+iptables -t mangle -A YOUR_CHAIN_NAME -s 192.168.1.xxx/32 -j RETURN
+# 目标 ip 匹配上指定 ip set 的包，不走指定的特殊路由表（也就是走默认路由表）
+iptables -t mangle -A YOUR_CHAIN_NAME -m set --match-set your_ip_set_name dst -j RETURN
+iptables -t mangle -A YOUR_CHAIN_NAME -j MARK --set-mark 100
+iptables -t mangle -A PREROUTING -s 192.168.1.0/24 -j YOUR_CHAIN_NAME
+
+ip -4 rule add fwmark 100 table 100
+
+sysctl -w net.ipv4.conf.all.src_valid_mark=1
+
+# 如果基于 fwmark 的路由规则不能正常工作，可以加这几个配置
+sysctl -w net.ipv4.fwmark_reflect=1
+sysctl -w net.ipv4.conf.all.rp_filter=2
+# 涉及到的 interface 都配置下
+sysctl -w net.ipv4.conf.your_interface_device.rp_filter=2</code></pre>

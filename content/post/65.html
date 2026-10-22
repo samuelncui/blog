@@ -1,0 +1,30 @@
+{
+  "title": "如何取消某个特定的软件的用户账户控制? – 转",
+  "date": "2013-10-29T09:19:41+08:00",
+  "lastmod": "2013-10-29T09:19:41+08:00",
+  "url": "/post/如何取消某个特定的软件的用户账户控制-转/",
+  "draft": false,
+  "description": "转载 RunAsInvoker 在 Windows 7 中的注册表配置方法，针对不修改系统文件或设置的程序处理 UAC 提示。",
+  "categories": [
+    "系统与网络"
+  ],
+  "tags": [
+    "Windows",
+    "故障排查",
+    "转载"
+  ],
+  "seoTitle": "如何取消某个特定的软件的用户账户控制? - 转 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-65",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/如何取消某个特定的软件的用户账户控制-转/"
+}
+
+
+<p>在网上看到了这篇教程,转到这里待用好了……<br/>
+(Windows7可用)</p>
+<p>手动修改注册表：<br/>
+在 HKEY_CURRENT_USERS\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers 键下面新建值，值的名字是程序的全路径，值数据是“RunAsInvoker”。<br/>
+该程序在没有修改系统文件或设置的情况下不会弹出用户帐户控制！（同时你也不用关闭UAC降低系统安全性）。</p>
+<p>来源:<a href="http://zhidao.baidu.com/link?url=p870H7VYgNhXsOGyBhSi06oYdtgz8ljEJTKQ-oZOw9V3Dc_0OtVxwngAljqAE9PoJEHYt8kkjscKW8oISngMPa" rel="noopener noreferrer">http://zhidao.baidu.com/link?url=p870H7VYgNhXsOGyBhSi06oYdtgz8ljEJTKQ-oZOw9V3Dc_0OtVxwngAljqAE9PoJEHYt8kkjscKW8oISngMPa</a></p>

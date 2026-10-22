@@ -1,0 +1,29 @@
+{
+  "title": "ZFS on Linux 提升读取性能",
+  "date": "2022-09-13T14:14:08+08:00",
+  "lastmod": "2022-09-13T14:14:08+08:00",
+  "url": "/post/zfs-on-linux-提升读取性能/",
+  "draft": false,
+  "description": "记录八盘 RAIDZ2 读取时硬盘利用不足的现象，尝试通过调整 ZFS 的 zfetch_max_distance 预取参数改善吞吐。",
+  "categories": [
+    "NAS 与存储"
+  ],
+  "tags": [
+    "ZFS",
+    "Linux",
+    "存储",
+    "性能优化"
+  ],
+  "seoTitle": "ZFS on Linux 提升读取性能 - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "崔 竞宁",
+  "translationKey": "post-390",
+  "originalLanguage": "zh",
+  "giscusPath": "/post/zfs-on-linux-提升读取性能/"
+}
+
+
+
+<p class="wp-block-paragraph">我的 ZFS 系统是由 8 x 10T HDD 组成的 raidz2，读取性能一直在 190MB/s 左右。这个速度不算太慢，但是到达这个速度时，从 iostat 的情况看，磁盘使用率只有 25% 左右，cpu 占用率也不高，还有很大的提升空间。</p>
+<p class="wp-block-paragraph">在网上找了半天，看到 zfetch_max_distance 参数可能会影响读取性能，这个参数影响流预加载最大大小，或者可以说是读取 buffer 的大小（<a href="https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Module%20Parameters.html#zfetch-max-distance" rel="noopener noreferrer">参考这个文档</a>）。</p>
+<p class="wp-block-paragraph">使用命令 <code>echo 67108864 &gt; /sys/module/zfs/parameters/zfetch_max_distance</code> 来将这个参数调整为 64MB 大小，可以显著提高读取速度。</p>

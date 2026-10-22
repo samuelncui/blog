@@ -1,0 +1,175 @@
+theme = 'stack'
+baseURL = 'https://samcui.com/'
+title = 'SamCui Computing'
+locale = 'zh-CN'
+defaultContentLanguage = 'zh'
+hasCJKLanguage = true
+enableRobotsTXT = true
+
+[params]
+description = "崔竞宁的个人网站 | Samuel N Cui's Website"
+author = 'Samuel N Cui'
+seoTitle = "SamCui Computing - 崔竞宁的个人网站 | Samuel N Cui's Website"
+
+[params.giscus]
+enabled = true
+repo = 'samuelncui/blog'
+repoId = 'R_kgDOVTJ05A'
+category = 'Announcements'
+categoryId = 'DIC_kwDOVTJ05M4DJUPP'
+
+[permalinks.page]
+post = '/post/:slug/'
+posts = '/post/:slug/'
+
+[taxonomies]
+category = 'categories'
+tag = 'tags'
+
+[outputs]
+home = ['HTML', 'RSS', 'LegacySitemapIndex', 'PostSitemap', 'PageSitemap', 'CategorySitemap']
+section = ['HTML', 'RSS']
+taxonomy = ['HTML', 'RSS']
+term = ['HTML', 'RSS']
+
+# Imported HTML is sanitized and reviewed before entering this repository.
+[security]
+allowContent = ['text/markdown', 'text/html']
+
+[pagination]
+pagerSize = 10
+
+[outputFormats.LegacySitemapIndex]
+mediaType = 'application/xml'
+baseName = 'sitemap_index'
+isPlainText = true
+notAlternative = true
+
+[outputFormats.PostSitemap]
+mediaType = 'application/xml'
+baseName = 'post-sitemap'
+isPlainText = true
+notAlternative = true
+
+[outputFormats.PageSitemap]
+mediaType = 'application/xml'
+baseName = 'page-sitemap'
+isPlainText = true
+notAlternative = true
+
+[outputFormats.CategorySitemap]
+mediaType = 'application/xml'
+baseName = 'category-sitemap'
+isPlainText = true
+notAlternative = true
+
+[params.sidebar]
+avatar = 'img/avatar.jpg'
+subtitle = "崔竞宁的个人网站 | Samuel N Cui's Website"
+
+[params.dateFormat]
+published = '2006年1月2日'
+lastUpdated = '2006年1月2日'
+
+[params.article]
+readingTime = true
+toc = true
+
+[params.widgets]
+homepage = [{ type = 'categories' }, { type = 'tag-cloud' }]
+page = [{ type = 'toc' }]
+
+[params.colorScheme]
+toggle = true
+default = 'auto'
+
+
+[languages.zh]
+label = "简体中文"
+locale = "zh-CN"
+weight = 1
+
+[languages.zh.params.sidebar]
+subtitle = "崔竞宁的个人网站"
+
+[[languages.zh.menus.main]]
+name = "首页"
+url = "/"
+weight = 1
+[languages.zh.menus.main.params]
+icon = "home"
+
+[[languages.zh.menus.main]]
+name = "文章"
+url = "/post/"
+weight = 2
+[languages.zh.menus.main.params]
+icon = "archives"
+
+[[languages.zh.menus.main]]
+name = "介绍小崔"
+url = "/about-samcui/"
+weight = 3
+[languages.zh.menus.main.params]
+icon = "user"
+
+[[languages.zh.menus.social]]
+name = "GitHub"
+url = "https://github.com/samuelncui"
+[languages.zh.menus.social.params]
+icon = "brand-github"
+
+[[languages.zh.menus.social]]
+name = "RSS"
+url = "/index.xml"
+[languages.zh.menus.social.params]
+icon = "rss"
+
+[languages.en]
+label = "English"
+locale = "en-US"
+weight = 2
+
+[languages.en.params.sidebar]
+subtitle = "Samuel N Cui’s personal blog"
+
+[languages.en.params]
+description = "Samuel N Cui’s personal blog: technology, projects and life."
+seoTitle = "SamCui Computing - Samuel N Cui’s Website"
+
+[languages.en.params.dateFormat]
+published = "January 2, 2006"
+lastUpdated = "January 2, 2006"
+
+[[languages.en.menus.main]]
+name = "Home"
+url = "/en/"
+weight = 1
+[languages.en.menus.main.params]
+icon = "home"
+
+[[languages.en.menus.main]]
+name = "Posts"
+url = "/en/post/"
+weight = 2
+[languages.en.menus.main.params]
+icon = "archives"
+
+[[languages.en.menus.main]]
+name = "About"
+url = "/en/about-samcui/"
+weight = 3
+[languages.en.menus.main.params]
+icon = "user"
+
+[[languages.en.menus.social]]
+name = "GitHub"
+url = "https://github.com/samuelncui"
+[languages.en.menus.social.params]
+icon = "brand-github"
+
+[[languages.en.menus.social]]
+name = "RSS"
+url = "/en/index.xml"
+[languages.en.menus.social.params]
+icon = "rss"

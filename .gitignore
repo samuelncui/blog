@@ -1,0 +1,12 @@
+/public/
+/resources/
+/assets/jsconfig.json
+/.hugo_build.lock
+.DS_Store
+.env
+.env.*
+*.pem
+*.key
+*.sql
+*.sql.gz
+node_modules/

@@ -1,0 +1,48 @@
+{
+  "title": "acp2larkbot: Bridging Lark to AI Agents over ACP",
+  "date": "2026-06-01T19:03:52+08:00",
+  "lastmod": "2026-06-01T19:11:59+08:00",
+  "url": "/en/post/acp2larkbot-bridging-lark-to-ai-agents-over-acp/",
+  "draft": false,
+  "description": "Introduces acp2larkbot, a bridge between Lark and ACP-compatible agents, with streaming answers, collapsible tool-call panels and support for both local subprocesses and remote WebSocket backends.",
+  "categories": [
+    "开发与开源"
+  ],
+  "tags": [
+    "AI",
+    "开源项目",
+    "自动化"
+  ],
+  "seoTitle": "acp2larkbot: Bridging Lark to AI Agents over ACP - SamCui Computing",
+  "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  "author": "Samuel N Cui",
+  "translationKey": "post-422",
+  "originalLanguage": "en",
+  "giscusPath": "/post/acp2larkbot-bridging-lark-to-ai-agents-over-acp/"
+}
+
+
+
+<p class="wp-block-paragraph">A lot of AI agents these days speak the <a href="https://github.com/google-cloud/agent-client-protocol" rel="noopener noreferrer">Agent Client Protocol (ACP)</a> — it’s becoming a common interface for agent communication. But most of them don’t have a chat UI. Some, like <a href="https://github.com/nousresearch/hermes-agent" rel="noopener noreferrer">Hermes</a> or <a href="https://github.com/openclaw/openclaw" rel="noopener noreferrer">OpenClaw</a>, support Lark (Feishu) as a channel, but the integration is often incomplete — streaming might not work well, tool call visibility is missing, or the card rendering is buggy.</p>
+<p class="wp-block-paragraph"><strong>acp2larkbot</strong> is a universal bridge: pipe any ACP-compatible agent through it, and you get a fully-featured Lark bot with streaming cards, tool call panels, and proper error display.</p>
+<h2 class="wp-block-heading">How It Works</h2>
+<p class="wp-block-paragraph">You send a message in a Lark chat. acp2larkbot forwards it to an ACP agent over stdio or websocket. The agent’s response streams back into the chat as a dynamic card. Tool calls appear as collapsible panels; the final answer streams in real time with a typewriter effect.</p>
+<p class="wp-block-paragraph">The card layout is simple: action panels on top (one per tool call or processing step, collapsed by default), and a scrolling answer section at the bottom.</p>
+<h2 class="wp-block-heading">Quick Start</h2>
+<pre class="wp-block-code"><code># install
+curl -fsSL https://raw.githubusercontent.com/samuelncui/acp2larkbot/main/install.sh | bash
+
+# generate config (interactive)
+acp2larkbot init -o config.yaml
+
+# validate
+acp2larkbot test -c config.yaml
+
+# run
+acp2larkbot run -c config.yaml</code></pre>
+<p class="wp-block-paragraph">Point the config at any ACP backend — local (<code>type: cmd</code>, runs as a child process) or remote (<code>type: network</code>, connects via websocket) — and you’re done. The same binary works for both.</p>
+<h2 class="wp-block-heading">Why Not Use the Built-in Lark Support?</h2>
+<p class="wp-block-paragraph">Agent frameworks that support Lark directly tend to treat it as a secondary channel. Streaming cards often render blank. Tool calls are either invisible or mixed into a single text blob. Session management is inconsistent. acp2larkbot is laser-focused on doing one thing well — being the best Lark bot bridge — so the card rendering, session handling, and streaming are all first-class.</p>
+<p class="wp-block-paragraph">Also, for agents that speak ACP but don’t know what Lark is, acp2larkbot gives them a chat interface without any modification to the agent itself. It’s a drop-in bridge.</p>
+<h2 class="wp-block-head-block wp-block-heading">Repo</h2>
+<p class="wp-block-paragraph">Source and detailed docs at <a href="https://github.com/samuelncui/acp2larkbot" rel="noopener noreferrer">github.com/samuelncui/acp2larkbot</a>.</p>
