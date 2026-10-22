@@ -15,10 +15,11 @@ baseline = json.loads((repo / 'migration/seo.json').read_text())
 translations = json.loads((repo / 'migration/translations.json').read_text())
 originals = {unquote(row['paths']['zh']): row['originalLanguage'] for row in translations}
 pair_by_path = {unquote(row['paths']['zh']): row for row in translations}
-origin = json.loads(subprocess.run(
+config = json.loads(subprocess.run(
     ['hugo', 'config', '--format', 'json'], cwd=repo,
     check=True, capture_output=True, text=True,
-).stdout)['baseurl'].rstrip('/')
+).stdout)
+origin = config['baseurl'].rstrip('/')
 ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9', 'i': 'http://www.google.com/schemas/sitemap-image/1.1'}
 
 class Head(HTMLParser):
@@ -115,6 +116,7 @@ for row in baseline['pages']:
         assert target(image).is_file()
 
 home = read(root / 'index.html')
+assert home.meta['google-site-verification'] == config['params']['googlesiteverification']
 assert home.title == baseline['home']['title']
 assert home.meta['description'] == baseline['home']['description']
 assert home.schemas[0]['@type'] == 'WebSite'

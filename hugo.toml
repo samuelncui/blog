@@ -7,6 +7,7 @@ hasCJKLanguage = true
 enableRobotsTXT = true
 
 [params]
+googleSiteVerification = 'P5nWc8B8ToWesB6pmTj1VQaphIBdKRWpWHJ_5NpufB0'
 description = "崔竞宁的个人网站 | Samuel N Cui's Website"
 author = 'Samuel N Cui'
 seoTitle = "SamCui Computing - 崔竞宁的个人网站 | Samuel N Cui's Website"
